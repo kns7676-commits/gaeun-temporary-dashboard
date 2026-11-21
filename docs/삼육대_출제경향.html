@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>삼육대 논술 출제경향</title>
+<style>
+/* Layout: 한 열 문서 — 요약 → 집중 공부 → 3년 문항표(학년도 탭) → 출처 */
+:root{
+  --bg:#f4f6f3; --surface:#ffffff; --line:#d9dfd6; --ink:#1b241c; --muted:#5d6a5f;
+  --accent:#2f6b3a; --accent-soft:#e3efe4; --warn:#9a4a12; --warn-soft:#fbeedd;
+  --ko:#2f5ea8; --ko-soft:#e5edf9; --ma:#8a3b8f; --ma-soft:#f4e6f5;
+  --font:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121712; --surface:#1a211b; --line:#2c372d; --ink:#e4ebe4; --muted:#a0ada1; --accent:#7fc58b; --accent-soft:#1f3322; --warn:#f0a868; --warn-soft:#3a2a18;
+  --ko:#8db4f2; --ko-soft:#1d2a40; --ma:#e09ae4; --ma-soft:#352038; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#121712; --surface:#1a211b; --line:#2c372d; --ink:#e4ebe4; --muted:#a0ada1;
+  --accent:#7fc58b; --accent-soft:#1f3322; --warn:#f0a868; --warn-soft:#3a2a18;
+  --ko:#8db4f2; --ko-soft:#1d2a40; --ma:#e09ae4; --ma-soft:#352038; color-scheme:dark; }
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:24px 48px; }
+.wrap{ max-width:900px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); gap:18px; }
+h1{ font-size:clamp(22px,5vw,28px); margin:0 0 4px; letter-spacing:-0.01em; text-wrap:balance; }
+h2{ font-size:18px; margin:0 0 10px; }
+h3{ font-size:15px; margin:14px 0 6px; }
+p{ margin:0 0 8px; }
+.sub{ color:var(--muted); font-size:13.5px; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+.key{ background:var(--accent-soft); border-color:transparent; }
+.warn{ background:var(--warn-soft); border-color:transparent; }
+.warn b{ color:var(--warn); }
+ul,ol{ margin:0; padding-left:20px; } li{ margin:3px 0; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 0; }
+.chip{ font-size:12.5px; padding:2px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+.tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.tab{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:6px 14px; font:inherit; font-size:14px; cursor:pointer; }
+.tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:700; }
+.tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.scroll{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px; }
+th,td{ border-bottom:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:top; }
+thead th{ font-size:12.5px; color:var(--muted); background:var(--bg); }
+td.n{ white-space:nowrap; font-variant-numeric:tabular-nums; }
+.tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:1px 7px; border-radius:6px; white-space:nowrap; }
+.tag.ko{ background:var(--ko-soft); color:var(--ko); } .tag.ma{ background:var(--ma-soft); color:var(--ma); }
+.grid2{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+.meta{ font-size:13px; color:var(--muted); margin:0 0 8px; }
+a{ color:var(--accent); word-break:break-all; }
+footer{ font-size:12.5px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>삼육대 논술 출제경향 (인문)</h1>
+  <p class="sub">2024·2025·2026학년도 기출 45문항 · 삼육대 입학처 공식 「선행학습 영향평가 자체평가 보고서」 문항카드 기준 · 2026.11.20 정리</p>
+</header>
+
+<section class="card key">
+  <h2>한눈에 보기</h2>
+  <ul>
+    <li><b>국어 출처는 3년 모두 EBS 「수능특강」</b>이었습니다. 매년 <b>그해 수능용 최신판</b>을 썼습니다(2024 시험 → 2023년 발행본, 2025 → 2024년, 2026 → 2025년).</li>
+    <li><b>수학 출처는 바뀌어 왔습니다.</b> 2024는 교과서(미래엔 수학Ⅰ·Ⅱ), 2025는 수능특강, 2026은 수능특강 5문항과 수능완성 1문항이었습니다.</li>
+    <li>국어 구성은 거의 고정입니다. <b>화법과 작문 2~3 · 독서 3 · 문학 3</b>이고, 문법(언어와 매체)은 2025·2026에 1문항씩 나왔습니다.</li>
+    <li>국어 답은 거의 모두 <b>제시문에서 찾아 그대로 쓰기</b>입니다(첫·마지막 어절, 정해진 어절 수의 빈칸).</li>
+    <li>2027(올해)은 <b>13문항(국어 8 + 수학 5), 80분</b>입니다. 2026까지는 15문항(9+6)이었습니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>올해 집중할 곳 (3년 분석 기반 추천)</h2>
+  <p class="meta">아래는 기출 패턴에서 이끌어 낸 판단이며, 대학이 올해 범위를 따로 발표한 것은 아닙니다.</p>
+  <ol>
+    <li><b>2026년 발행 수능특강(2027 수능 대비용) 국어 4권</b>: 3년 내내 국어는 그해 수능특강에서 나왔습니다. 가장 먼저 볼 교재입니다.
+      <div class="chips"><span class="chip">문학</span><span class="chip">독서</span><span class="chip">화법과 작문</span><span class="chip">언어와 매체</span></div></li>
+    <li><b>문학 — 현대소설은 매년 1문항</b>(「역마」→「서울, 1964년 겨울」→「태평천하」). 나머지 2문항은 고전(한시·가사·고전소설·고전수필·민요)과 현대시에서 나왔습니다. 수능특강 문학 작품의 <b>서술상 특징, 소재의 의미, 표현법</b>을 정리하세요.</li>
+    <li><b>독서 — 사회·경제 지문이 매년</b> 나왔습니다(자유주의, 아웃소싱, 공공선택 이론, 엘리트론, 지급준비제도). 요약 빈칸에는 <b>지문 속 개념어가 그대로</b> 들어갑니다.</li>
+    <li><b>화법과 작문 — 말하기 전략과 글쓰기 전략</b>이 반복됩니다(면담·협상·발표·연설의 전략, 건의문·비평문의 쓰기 전략).</li>
+    <li><b>문법 — 문장 단원</b>(관형어, 의문문의 유형)에서 나왔습니다.</li>
+    <li><b>수학 — 수열(수학Ⅰ)은 3년 모두 출제</b>되었습니다. 그밖에 미분(접선·극대극소·미분가능성), 정적분(넓이·절댓값), 지수·로그, 삼각함수, 극한·연속이 번갈아 나왔습니다. 수능특강·수능완성 수학Ⅰ·Ⅱ로 서술형 풀이를 연습하세요.</li>
+  </ol>
+</section>
+
+<section class="card warn">
+  <h2>채점에서 점수를 잃는 곳</h2>
+  <ul>
+    <li>제시문 표현을 <b>그대로</b> 써야 정답입니다. <b>조사를 빼거나 바꾸면 오답, 오탈자도 오답</b>입니다(띄어쓰기 오류는 인정된 예가 있음).</li>
+    <li>"2어절로", "한 단어로" 같은 <b>어절 수 조건</b>을 지켜야 합니다. 빈칸마다 부분점수는 없습니다.</li>
+    <li>수학은 단계별 점수입니다. 중간값(예: a, b의 값)을 분명히 적으세요.</li>
+    <li>수정액·수정테이프는 쓸 수 없습니다. 두 줄 긋고 다시 씁니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>3년 전체 문항과 출처</h2>
+  <p class="meta">출처는 대학이 문항카드에 적은 교재명과 쪽수입니다. '시간'은 대학이 적은 예상 소요 시간(전체 80분)입니다.</p>
+  <div class="tabs" role="tablist" aria-label="학년도 선택" id="tabs"></div>
+  <div class="scroll"><table>
+    <thead><tr><th>번호</th><th>과목</th><th>내용 · 제시문</th><th>출처 (교재 · 쪽)</th><th>시간</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p class="meta" id="note" style="margin-top:8px"></p>
+</section>
+
+<section class="card">
+  <h2>3년 비교</h2>
+  <div class="grid2">
+    <div>
+      <h3>국어 과목별 문항 수</h3>
+      <div class="scroll"><table style="min-width:0">
+        <thead><tr><th>과목</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+        <tbody>
+          <tr><td>화법과 작문</td><td class="n">3</td><td class="n">2</td><td class="n">2</td></tr>
+          <tr><td>언어와 매체(문법)</td><td class="n">0</td><td class="n">1</td><td class="n">1</td></tr>
+          <tr><td>독서</td><td class="n">3</td><td class="n">3</td><td class="n">3</td></tr>
+          <tr><td>문학</td><td class="n">3</td><td class="n">3</td><td class="n">3</td></tr>
+        </tbody></table></div>
+    </div>
+    <div>
+      <h3>수학 단원별 문항 수</h3>
+      <div class="scroll"><table style="min-width:0">
+        <thead><tr><th>단원</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+        <tbody>
+          <tr><td>지수·로그 (수Ⅰ)</td><td class="n">0</td><td class="n">1</td><td class="n">1</td></tr>
+          <tr><td>삼각함수 (수Ⅰ)</td><td class="n">1</td><td class="n">1</td><td class="n">0</td></tr>
+          <tr><td>수열 (수Ⅰ)</td><td class="n">1</td><td class="n">2</td><td class="n">1</td></tr>
+          <tr><td>극한·연속 (수Ⅱ)</td><td class="n">2</td><td class="n">0</td><td class="n">1</td></tr>
+          <tr><td>미분 (수Ⅱ)</td><td class="n">0</td><td class="n">1</td><td class="n">2</td></tr>
+          <tr><td>적분 (수Ⅱ)</td><td class="n">2</td><td class="n">1</td><td class="n">1</td></tr>
+        </tbody></table></div>
+      <p class="meta">2026 12번(접선과 넓이)은 미분과 적분을 함께 써서 '미분'에 넣었습니다.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>원문(삼육대 입학처 공지사항):
+  <a href="https://ipsi.syu.ac.kr/2016_syu/pages/index.asp?p=29&b=B_1_1&bn=66389&m=read" target="_blank" rel="noopener">2026학년도 보고서</a> ·
+  <a href="https://ipsi.syu.ac.kr/2016_syu/pages/index.asp?p=29&b=B_1_1&bn=64541&m=read" target="_blank" rel="noopener">2025학년도 보고서</a> ·
+  <a href="https://ipsi.syu.ac.kr/2016_syu/pages/index.asp?p=29&b=B_1_1&bn=63027&m=read" target="_blank" rel="noopener">2024학년도 보고서</a></p>
+  <p>2027 형식(13문항, 80분)은 삼육대 2027 논술가이드 기준입니다.</p>
+</footer>
+</div>
+
+<script>
+var D = {
+ "2026": { note:"출처 교재는 모두 2025년 발행 EBS(2026 수능 대비용). 1·2·7·8번은 교과서도 함께 표기됨.", rows:[
+  [1,"ko","화법과 작문","졸업식 축사 연설 — 인성적·이성적 설득 전략 문장 찾기 (첫·끝 어절)","수능특강 화법과 작문 37 · 교과서(천재) 92",5],
+  [2,"ko","화법과 작문","학생 비평문(M세대·Z세대) — 글쓰기 전략이 쓰인 문장 찾기","수능특강 화법과 작문 232 · 교과서(지학사) 181",5],
+  [3,"ko","언어와 매체","의문문 유형(판정·설명·수사) — 대화 사례 번호 고르기","수능특강 언어와 매체 239",5],
+  [4,"ko","독서(사회)","신엘리트론·무의사 결정론 — 요약 빈칸(어절 수 조건)","수능특강 독서 126~127",5],
+  [5,"ko","독서(경제)","지급 준비 제도·신용 창조 — 요약 빈칸","수능특강 독서 257",5],
+  [6,"ko","독서(인문)","공자·묵자·순자의 악론 — 요약 빈칸","수능특강 독서 224",5],
+  [7,"ko","문학(고전수필)","정약용 「수오재기」 — 해당 문장 첫·끝 어절","수능특강 문학 263~264 · 교과서(천재) 194",5],
+  [8,"ko","문학(현대소설)","채만식 「태평천하」 — 편집자적 논평 문장 찾기","수능특강 문학 163~164 · 교과서(지학사) 181",5],
+  [9,"ko","문학(민요)","「나물 캐는 노래」 — 표현법에 해당하는 시어 찾기","수능특강 문학 67",5],
+  [10,"ma","수학Ⅱ","미분가능성 — 구간별 함수의 상수 구하기","수능특강 수학Ⅱ 31",3],
+  [11,"ma","수학Ⅱ","도함수 활용 — |f(x)|=k 실근 개수","수능특강 수학Ⅱ 64",5],
+  [12,"ma","수학Ⅱ","접선의 방정식과 넓이(정적분)","수능특강 수학Ⅱ 89",5],
+  [13,"ma","수학Ⅰ","수열의 합 — 부호가 반복되는 수열","수능특강 수학Ⅰ 89~91",5],
+  [14,"ma","수학Ⅱ","함수의 극한 — 가우스 기호 포함","수능완성 수학Ⅱ 136",5],
+  [15,"ma","수학Ⅰ","지수·로그 — 최댓값(산술·기하평균)","수능특강 수학Ⅰ 30",8]]},
+ "2025": { note:"국어 출처는 2024년 발행 수능특강, 수학은 수능특강(2024.01.16 발행). 시험일 2024.11.18.", rows:[
+  [1,"ko","화법과 작문","학생 발표(분리배출·폐지 재활용) — 발표 표현 전략 찾기","수능특강 화법과 작문 57~59",3],
+  [2,"ko","화법과 작문","학교 잡지 글 초고(팬데믹 아포칼립스 장르물) — 비평 글쓰기 전략","수능특강 화법과 작문 96~98",3],
+  [3,"ko","언어와 매체","관형어의 유형 — 실제 문장 속 관형어 찾기","수능특강 언어와 매체 31",6],
+  [4,"ko","독서(예술)","예술 작품 해석(지멜) — 글의 구조·중심 내용","수능특강 독서 81~82",5],
+  [5,"ko","독서(경영)","아웃소싱 — 표로 정리·요약","수능특강 독서 111",5],
+  [6,"ko","독서(경제)","공공 선택 이론 — 핵심어 도출","수능특강 독서 111",5],
+  [7,"ko","문학(고전소설)","윤계선 「달천몽유록」 — 인물의 말 찾기","수능특강 문학 131~132",7],
+  [8,"ko","문학(현대소설)","김승옥 「서울, 1964년 겨울」 — 시대 상황·비유 표현 찾기","수능특강 문학 184~185",5],
+  [9,"ko","문학(현대시)","오장환 「성탄제」 — 소재의 의미","수능특강 문학 91",7],
+  [10,"ma","수학Ⅰ","거듭제곱근","수능특강 수학Ⅰ 4~18",2],
+  [11,"ma","수학Ⅱ","극대·극소 — 삼차방정식 실근 개수","수능특강 수학Ⅰ 54~69 (카드 표기 그대로)",3],
+  [12,"ma","수학Ⅰ","수열의 합","수능특강 수학Ⅰ 86~103",5],
+  [13,"ma","수학Ⅰ","삼각함수의 그래프(절댓값)","수능특강 수학Ⅰ 36~53",6],
+  [14,"ma","수학Ⅰ","수열의 귀납적 정의","수능특강 수학Ⅰ 86~103",7],
+  [15,"ma","수학Ⅱ","정적분 — 절댓값 함수의 최솟값","수능특강 수학Ⅱ 72~87",7]]},
+ "2024": { note:"국어 출처는 2023년 발행 수능특강, 수학은 교과서(미래엔, 황선욱 외 8, 2020).", rows:[
+  [1,"ko","화법과 작문","학생·상담 교사 면담 — 질문·답변 전략","수능특강 화법과 작문 43~44",5],
+  [2,"ko","화법과 작문","학생 건의문 초고(1·2학년 교실 층 바꾸기) — 글 고쳐 쓰기","수능특강 화법과 작문 130",5],
+  [3,"ko","화법과 작문","사원 대표·서점 사장 협상 — 협상 전략","수능특강 화법과 작문 50~51",5],
+  [4,"ko","독서(사회)","자유주의의 공적·사적 영역 — 사실적 내용 파악","수능특강 독서 76~77",5],
+  [5,"ko","독서(사회)","(4번과 같은 지문) — 요약","수능특강 독서 76~77",5],
+  [6,"ko","독서(과학·기술)","네트워크 프로토콜·OSI 참조 모델 — 요약 빈칸","수능특강 독서 186~187",5],
+  [7,"ko","문학(한시)","허난설헌 「견흥」 — 소재의 기능","수능특강 문학 69",5],
+  [8,"ko","문학(가사)","「복선화음가」 — 조건에 맞는 시행 찾기","수능특강 문학 62",5],
+  [9,"ko","문학(현대소설)","김동리 「역마」 — 소재의 의미","수능특강 문학 166~167",5],
+  [10,"ma","수학Ⅱ","정적분 — 속도와 거리","교과서 수학Ⅱ(미래엔) 143",3],
+  [11,"ma","수학Ⅱ","함수의 연속","교과서 수학Ⅱ(미래엔) 31",3],
+  [12,"ma","수학Ⅰ","삼각함수 — 방정식 활용","교과서 수학Ⅰ(미래엔) 81",5],
+  [13,"ma","수학Ⅰ","등차수열","교과서 수학Ⅰ(미래엔) 143",5],
+  [14,"ma","수학Ⅱ","함수의 극한·미분계수","교과서 수학Ⅱ(미래엔) 53",5],
+  [15,"ma","수학Ⅱ","정적분 — 그래프 조건","교과서 수학Ⅱ(미래엔) 90",8]]}
+};
+var cur = "2026";
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function render(){
+  document.getElementById("tabs").innerHTML = ["2026","2025","2024"].map(function(y){
+    return '<button type="button" class="tab" role="tab" data-y="'+y+'" aria-selected="'+(y===cur)+'">'+y+'학년도</button>'; }).join("");
+  document.getElementById("rows").innerHTML = D[cur].rows.map(function(r){
+    return '<tr><td class="n">'+r[0]+'</td><td><span class="tag '+r[1]+'">'+esc(r[2])+'</span></td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td><td class="n">'+r[5]+'분</td></tr>'; }).join("");
+  document.getElementById("note").textContent = D[cur].note;
+}
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b = e.target.closest("[data-y]"); if(!b) return; cur = b.getAttribute("data-y"); render();
+  var t = document.querySelector('.tab[data-y="'+cur+'"]'); if (t) t.focus(); });
+render();
+</script>
+</body>
+</html>

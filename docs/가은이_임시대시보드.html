@@ -1,0 +1,1478 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>논술 일정 및 경쟁률</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  /* 레이아웃: 단일 컬럼 대시보드 — 할 일(요약) → 달력 → 경쟁률 → 일정표 → 학교별 상세 카드(세부) */
+  :root{
+    --ink:#141b2e;
+    --muted:#5b6b85;
+    --paper:#f2f5fb;
+    --surface:#ffffff;
+    --surface-2:#eaf1fc;
+    --line:#dce6f5;
+    --accent:#1d63e0;
+    --accent-2:#7c5cfc;
+    --accent-soft:#e3ecfc;
+    --accent-ink:#0d3d8f;
+    --on-accent:#ffffff;
+    --low:#1f8a5a;
+    --low-soft:#e2f5ec;
+    --mid:#9a6300;
+    --mid-soft:#fbedd6;
+    --high:#d1382b;
+    --high-soft:#fce3e0;
+    --shadow: 0 1px 2px rgba(20,27,46,.04), 0 10px 26px rgba(20,27,46,.07);
+    --font-display:"Jua", "Noto Sans KR", sans-serif;
+    --font-body:"Noto Sans KR", "Malgun Gothic", sans-serif;
+    --font-data:"IBM Plex Mono", ui-monospace, monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eef2fb; --muted:#9fadc7; --paper:#0d1220; --surface:#161d30; --surface-2:#1b2440;
+      --line:#2b3455; --accent:#6ea1ff; --accent-2:#a996ff; --accent-soft:#1e2c50; --accent-ink:#d7e6ff;
+      --on-accent:#0d1220;
+      --low:#5fcf9a; --low-soft:#173225; --mid:#f0bd63; --mid-soft:#3a2c12; --high:#f0897d; --high-soft:#3d1e1c;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.4);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eef2fb; --muted:#9fadc7; --paper:#0d1220; --surface:#161d30; --surface-2:#1b2440;
+    --line:#2b3455; --accent:#6ea1ff; --accent-2:#a996ff; --accent-soft:#1e2c50; --accent-ink:#d7e6ff;
+    --on-accent:#0d1220;
+    --low:#5fcf9a; --low-soft:#173225; --mid:#f0bd63; --mid-soft:#3a2c12; --high:#f0897d; --high-soft:#3d1e1c;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  [hidden]{ display:none !important; }
+
+  /* 수시·정시 탭 */
+  .mode-tabs{
+    display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:6px; border-radius:16px;
+    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
+    position:sticky; top:10px; z-index:5;
+  }
+  .mode-tab{
+    min-height:46px; border:none; border-radius:11px; background:transparent; color:var(--muted); cursor:pointer;
+    font-family:var(--font-display); font-size:18px; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .mode-tab small{ font-family:var(--font-body); font-size:11.5px; font-weight:500; }
+  .mode-tab:hover{ background:var(--surface-2); color:var(--ink); }
+  .mode-tab[aria-selected="true"]{ background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:var(--on-accent); }
+  .mode-tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .panel{ display:flex; flex-direction:column; gap:22px; }
+
+  /* 정시: 일정 타임라인 */
+  .jtl{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+  .jtl li{
+    display:grid; grid-template-columns:190px 1fr auto; gap:12px; align-items:center;
+    padding:11px 4px; border-bottom:1px solid var(--line);
+  }
+  .jtl li:last-child{ border-bottom:none; }
+  .jtl .jdate{ font-family:var(--font-data); font-size:12.5px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .jtl .jwhat{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .jtl .jwhat b{ font-size:13.5px; }
+  .jtl .jwhat span{ font-size:11.5px; color:var(--muted); line-height:1.5; }
+  .jtl li.done{ color:var(--muted); }
+  .jtl li.now{ background:var(--accent-soft); border-radius:10px; }
+  .jtl .jkind{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; background:var(--muted); }
+  .jtl .k-suneung{ background:var(--mid); } .jtl .k-score{ background:var(--accent-2); }
+  .jtl .k-apply{ background:var(--high); } .jtl .k-gun{ background:var(--accent); }
+  .jtl .k-result{ background:var(--low); } .jtl .k-susi{ background:var(--muted); } .jtl .k-extra{ background:var(--muted); }
+  @media (max-width:520px){
+    .jtl li{ grid-template-columns:1fr auto; }
+    .jtl .jdate{ grid-column:1 / -1; }
+  }
+
+  /* 정시: 최저 계산기 */
+  .calc-inputs{ display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin-bottom:14px; }
+  .calc-field{ display:flex; flex-direction:column; gap:4px; }
+  .calc-field label{ font-size:11.5px; font-weight:700; color:var(--muted); }
+  .calc-field select{
+    min-height:42px; padding:6px 10px; border-radius:10px; border:1px solid var(--line); background:var(--surface-2);
+    color:var(--ink); font-family:var(--font-data); font-size:15px; font-weight:600;
+  }
+  .calc-field select:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .calc-out{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:8px; }
+  .calc-out li{ border:1px solid var(--line); border-radius:12px; padding:11px 13px; display:flex; flex-direction:column; gap:4px; }
+  .calc-out .c-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .calc-out .c-head b{ font-size:13.5px; }
+  .calc-out .c-rule{ font-size:11.5px; color:var(--muted); }
+  .calc-out .c-detail{ font-size:12px; font-family:var(--font-data); font-variant-numeric:tabular-nums; }
+  .chip{ font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; white-space:nowrap; }
+  .chip.ok{ background:var(--low-soft); color:var(--low); }
+  .chip.no{ background:var(--high-soft); color:var(--high); }
+  .chip.wait{ background:var(--surface-2); color:var(--muted); }
+  .chip.free{ background:var(--accent-soft); color:var(--accent-ink); }
+  .calc-out li.ok{ border-color:var(--low); }
+  .calc-out li.no{ border-color:var(--high); }
+  .calc-note{ margin:12px 0 0; font-size:11.5px; color:var(--muted); line-height:1.6; }
+  .stats{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap:8px; margin-bottom:18px; }
+  .stat{ background:var(--surface-2); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:3px; }
+  .stat-label{ font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.04em; }
+  .stat-num{ font-family:var(--font-data); font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink); }
+  .stat-num small{ font-family:var(--font-body); font-size:12px; font-weight:500; margin-left:2px; color:var(--muted); }
+  .stat-sub{ font-size:11.5px; color:var(--muted); line-height:1.5; }
+  .mini-h{ margin:0 0 8px; font-size:13.5px; font-weight:700; }
+  .howto{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:8px; }
+  .howto li{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:3px; }
+  .howto b{ font-size:13px; }
+  .howto span{ font-size:12px; color:var(--muted); line-height:1.5; }
+
+  /* 정시: 체크리스트 */
+  .checklist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .checklist label{
+    display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    cursor:pointer; font-size:13px; line-height:1.55;
+  }
+  .checklist input{ width:18px; height:18px; margin:1px 0 0; flex-shrink:0; accent-color:var(--accent); }
+  .checklist small{ display:block; color:var(--muted); font-size:11.5px; }
+  .checklist input:checked + span{ color:var(--muted); text-decoration:line-through; }
+  .footnote a{ color:var(--accent); }
+  img{ max-width:100%; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:14px;
+    padding-inline:20px;
+    padding-block:36px 56px;
+  }
+  @media (max-width:480px){ body{ padding-inline:16px; } }
+  .wrap{ max-width:900px; margin-inline:auto; display:flex; flex-direction:column; gap:22px; }
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  .hero{
+    position:relative; overflow:hidden; border-radius:22px; padding:30px 28px;
+    background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    box-shadow:var(--shadow);
+  }
+  @media (max-width:480px){ .hero{ padding:24px 18px; } }
+  .hero::before, .hero::after{ content:""; position:absolute; border-radius:50%; background:rgba(255,255,255,.14); pointer-events:none; }
+  .hero::before{ width:220px; height:220px; right:-60px; top:-90px; }
+  .hero::after{ width:130px; height:130px; right:70px; bottom:-70px; background:rgba(255,255,255,.10); }
+  .hero > *{ position:relative; }
+  .eyebrow{
+    display:inline-block; margin:0 0 12px; padding:5px 13px; font-size:11.5px; font-weight:700;
+    letter-spacing:.1em; color:var(--on-accent); background:rgba(255,255,255,.2); border-radius:999px;
+  }
+  h1{
+    margin:0 0 10px; font-family:var(--font-display); font-weight:400; color:var(--on-accent);
+    font-size:clamp(22px, 4.4vw, 30px); line-height:1.35; text-wrap:balance;
+  }
+  .hero .sub{ margin:0; color:var(--on-accent); opacity:.88; font-size:12.5px; line-height:1.7; max-width:52ch; }
+
+  /* 할 일 요약 */
+  .todo{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap:10px; margin-top:18px; }
+  .todo-item{
+    background:var(--surface); color:var(--ink); border-radius:14px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:4px; min-width:0;
+  }
+  .todo-item .todo-label{ font-size:11px; font-weight:700; letter-spacing:.06em; color:var(--muted); }
+  .todo-item .todo-main{ font-size:14.5px; font-weight:700; line-height:1.45; }
+  .todo-item .todo-sub{ font-size:12px; color:var(--muted); line-height:1.5; }
+  .todo-item.warn .todo-label{ color:var(--mid); }
+  .todo-item.warn{ box-shadow:inset 0 0 0 2px var(--mid); }
+  .todo-item.suneung{ box-shadow:inset 0 0 0 2px var(--high); }
+  .todo-item.suneung .todo-label{ color:var(--high); }
+  .todo-item a{ color:var(--accent); font-weight:500; }
+
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:20px; }
+  @media (max-width:480px){ .card{ padding:16px; } }
+
+  .section-head{ display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+  .section-badge{
+    flex-shrink:0; width:32px; height:32px; border-radius:50%; background:var(--accent-soft); color:var(--accent-ink);
+    font-family:var(--font-display); font-size:13px; display:flex; align-items:center; justify-content:center;
+  }
+  .section-head-text{ min-width:0; }
+  .sub{ margin:0; color:var(--muted); font-size:12px; line-height:1.6; max-width:52ch; }
+
+  .table-card h2{ margin:0 0 4px; font-family:var(--font-display); font-weight:400; font-size:17px; color:var(--ink); }
+
+  .ratio-num{ font-family:var(--font-data); font-variant-numeric:tabular-nums; font-weight:700; }
+  .ratio-num.low{ color:var(--low); }
+  .ratio-num.mid{ color:var(--mid); }
+  .ratio-num.high{ color:var(--high); }
+  .ratio-time{ display:block; margin-top:2px; font-size:10.5px; font-weight:400; color:var(--muted); font-family:var(--font-body); white-space:nowrap; }
+  td.num, th.num{ font-family:var(--font-data); font-variant-numeric:tabular-nums; }
+  .icon-link{
+    display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px;
+    background:var(--accent-soft); color:var(--accent); text-decoration:none; line-height:1; flex-shrink:0;
+  }
+  .icon-link:hover{ background:var(--accent); color:var(--surface); }
+  .icon-link:focus-visible, .school-link:focus-visible, .pill-link:focus-visible, .minreq summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .icon-link svg{ width:15px; height:15px; display:block; }
+  .no-link{ color:var(--muted); font-size:11.5px; }
+
+  .table-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table{ width:100%; border-collapse:collapse; min-width:640px; }
+  th, td{ text-align:left; padding:11px 10px; font-size:13px; border-bottom:1px solid var(--line); border-right:1px solid var(--line); vertical-align:top; line-height:1.5; }
+  th:last-child, td:last-child{ border-right:none; }
+  #ratioTable th, #ratioTable td{ text-align:center; vertical-align:middle; }
+  #ratioTable td:first-child{ text-align:left; }
+  thead th{ background:var(--surface-2); }
+  th{ font-size:11px; color:var(--accent-ink); font-weight:700; letter-spacing:.03em; white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--surface-2); }
+  tbody tr.row-past{ color:var(--muted); }
+  tbody th{ font-size:13px; color:inherit; letter-spacing:0; text-align:left; }
+  #ratioTable tbody th{ text-align:left; }
+  .school-cell{ font-weight:700; white-space:nowrap; }
+  .school-cell .dept-sub{ display:block; font-weight:400; color:var(--muted); font-size:11.5px; margin-top:2px; }
+  .school-link{ color:inherit; text-decoration:none; border-bottom:1px dashed var(--accent); }
+  .school-link:hover{ color:var(--accent); }
+
+  /* 수능최저: 눌러서 펼치기 */
+  .minreq{ font-size:12.5px; text-align:left; }
+  .minreq summary{
+    cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:5px;
+    padding:6px 10px; border-radius:8px; background:var(--surface-2); font-weight:500; white-space:nowrap;
+  }
+  .minreq summary::-webkit-details-marker{ display:none; }
+  .minreq summary::after{ content:"▾"; font-size:10px; color:var(--muted); }
+  .minreq[open] summary::after{ content:"▴"; }
+  .minreq p{ margin:6px 0 0; max-width:24ch; font-size:11.5px; line-height:1.55; color:var(--muted); white-space:normal; }
+
+  .tag{
+    display:inline-block; margin-left:4px; padding:0 6px; border-radius:5px; font-size:10.5px; font-weight:700;
+    background:var(--mid-soft); color:var(--mid); vertical-align:1px;
+  }
+  .when-time{ font-family:var(--font-data); font-variant-numeric:tabular-nums; }
+
+  .dday{
+    display:inline-block; padding:2px 8px; border-radius:999px; font-family:var(--font-data); font-size:11px; font-weight:600;
+    font-variant-numeric:tabular-nums; white-space:nowrap; background:var(--accent-soft); color:var(--accent-ink);
+  }
+  .dday.soon{ background:var(--high-soft); color:var(--high); }
+  .dday.today{ background:var(--high); color:var(--surface); }
+  .dday.done{ background:var(--surface-2); color:var(--muted); }
+
+  .footnote{ margin:0; font-size:12.5px; line-height:1.7; color:var(--muted); }
+
+  /* 달력 */
+  .cal-legend{ display:flex; flex-wrap:wrap; gap:14px; margin:2px 0 16px; }
+  .cal-legend span{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); }
+  .cal-legend .dot{ width:9px; height:9px; border-radius:3px; flex-shrink:0; }
+  .cal-legend .dot.venue{ background:var(--accent); }
+  .cal-legend .dot.exam{ background:var(--high); }
+  .cal-legend .dot.result{ background:var(--low); }
+  .cal-legend .dot.suneung{ background:var(--mid); }
+  .cal-legend .dot.today{ background:none; border:2px solid var(--accent); }
+  .cal-month-strip{ display:flex; align-items:center; gap:10px; margin:22px 0 10px; }
+  .cal-month-strip.first{ margin-top:0; }
+  .cal-month-badge{
+    display:inline-block; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:var(--on-accent);
+    font-family:var(--font-display); font-weight:400; padding:6px 18px; border-radius:10px; font-size:15px;
+  }
+  .cal-scroll{ overflow-x:auto; margin-bottom:6px; }
+  .cal-grid{
+    display:grid; grid-template-columns:repeat(7, minmax(80px, 1fr)); gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden; min-width:600px;
+    list-style:none; margin:0; padding:0;
+  }
+  .cal-dow{ background:var(--surface-2); padding:7px 6px; font-size:11px; font-weight:700; text-align:center; color:var(--muted); }
+  .cal-dow.sun{ color:var(--high); }
+  .cal-dow.sat{ color:var(--accent); }
+  .cal-cell{ background:var(--surface); min-height:64px; padding:6px 5px 7px; display:flex; flex-direction:column; gap:3px; }
+  .cal-cell.empty{ background:var(--paper); }
+  .cal-cell.today{ box-shadow:inset 0 0 0 2px var(--accent); }
+  .cal-cell.past{ background:var(--paper); }
+  .cal-cell.past .cal-chip{ opacity:.6; }
+  .cal-daynum{ font-size:12px; font-weight:700; font-family:var(--font-data); display:flex; align-items:center; gap:4px; }
+  .cal-daynum.sun{ color:var(--high); }
+  .cal-daynum.sat{ color:var(--accent); }
+  .cal-today-tag{ font-family:var(--font-body); font-size:9.5px; padding:1px 5px; border-radius:4px; background:var(--accent); color:var(--surface); }
+  .cal-chip{ font-size:10.5px; line-height:1.4; padding:2px 5px; border-radius:5px; font-weight:600; }
+  .cal-chip.venue{ background:var(--accent-soft); color:var(--accent-ink); }
+  .cal-chip.exam{ background:var(--high-soft); color:var(--high); font-weight:700; }
+  .cal-chip.result{ background:var(--low-soft); color:var(--low); }
+  .cal-chip.suneung{ background:var(--mid-soft); color:var(--mid); font-weight:700; }
+
+  /* 학교별 상세 일정 카드 */
+  .detail-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap:14px; }
+  .detail{
+    border:1px solid var(--line); border-radius:14px; padding:16px; background:var(--surface);
+    display:flex; flex-direction:column; gap:14px; min-width:0;
+  }
+  .detail.is-next{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .detail.is-past{ background:var(--paper); }
+  .detail-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .detail-head h3{ margin:0; font-size:15.5px; font-weight:700; }
+  .detail-head .dept-sub{ display:block; font-size:11.5px; color:var(--muted); font-weight:400; margin-top:3px; }
+  .detail-head .dday{ font-size:12.5px; padding:4px 10px; }
+
+  .facts{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin:0; }
+  .fact{ background:var(--surface-2); padding:9px 11px; display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .fact dt{ font-size:10.5px; color:var(--muted); font-weight:700; letter-spacing:.04em; }
+  .fact dd{ margin:0; font-size:13.5px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .fact dd small{ font-weight:400; color:var(--muted); font-size:11.5px; margin-left:3px; }
+  .fact dd.tbd{ font-weight:500; color:var(--muted); font-size:12px; }
+  .fact dd.check{ font-weight:700; color:var(--mid); font-size:12px; }
+
+  .steps{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+  .step{ display:grid; grid-template-columns:14px 74px 1fr auto; gap:10px; align-items:start; position:relative; padding-bottom:10px; }
+  .step:last-child{ padding-bottom:0; }
+  .step::before{ content:""; position:absolute; left:6px; top:14px; bottom:-2px; width:2px; background:var(--line); }
+  .step:last-child::before{ display:none; }
+  .step .dot{ width:14px; height:14px; border-radius:50%; margin-top:2px; border:2px solid var(--muted); background:var(--surface); position:relative; z-index:1; }
+  .step.venue .dot{ border-color:var(--accent); }
+  .step.exam .dot{ border-color:var(--high); }
+  .step.result .dot{ border-color:var(--low); }
+  .step.done .dot{ background:var(--muted); border-color:var(--muted); }
+  .step.now .dot{ background:var(--accent); border-color:var(--accent); }
+  .step.check .dot{ background:var(--mid); border-color:var(--mid); }
+  .step .when{ font-family:var(--font-data); font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; padding-top:1px; }
+  .step .what{ font-size:12.5px; line-height:1.5; min-width:0; }
+  .step .what .label{ font-weight:700; }
+  .step .what .detail-text{ display:block; color:var(--muted); font-size:11.5px; }
+  .step .state{ font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:999px; white-space:nowrap; background:var(--surface-2); color:var(--muted); }
+  .step.now .state{ background:var(--accent); color:var(--surface); }
+  .step.check .state{ background:var(--mid-soft); color:var(--mid); }
+  .step.upcoming .state{ background:var(--accent-soft); color:var(--accent-ink); }
+  .step.done .when, .step.done .what{ color:var(--muted); }
+
+  .detail-note{ margin:0; font-size:11.5px; line-height:1.6; color:var(--high); }
+  .detail-note.pending{ color:var(--muted); }
+  .detail-note.check{ color:var(--mid); font-weight:500; }
+  .detail-note.past{ color:var(--low); font-weight:500; }
+  .detail-links{ display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
+  .pill-link{
+    display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:500; padding:8px 13px; min-height:36px;
+    border-radius:999px; background:var(--accent-soft); color:var(--accent-ink); text-decoration:none;
+  }
+  .pill-link:hover{ background:var(--accent); color:var(--surface); }
+  .pill-link svg{ width:12px; height:12px; }
+
+  @media (max-width:420px){
+    .step{ grid-template-columns:14px 62px 1fr auto; gap:8px; }
+  }
+
+  /* 기출문제 열기 버튼들 */
+  button{ font:inherit; }
+  .exam-btn{
+    display:inline-flex; align-items:center; gap:5px; margin:0; padding:4px 9px; border:1px solid var(--high);
+    border-radius:8px; background:var(--high-soft); color:var(--high); font-size:12.5px; font-weight:700; cursor:pointer;
+    font-variant-numeric:tabular-nums; text-align:left;
+  }
+  .exam-btn:hover{ background:var(--high); color:var(--surface); }
+  .exam-btn .pdf-count{ font-size:10.5px; font-weight:700; padding:0 6px; border-radius:999px; background:var(--surface); color:var(--high); }
+  .exam-btn svg{ width:13px; height:13px; flex-shrink:0; }
+  .guide-btn{
+    display:inline-flex; align-items:center; gap:7px; min-height:40px; padding:6px 10px; border:none; border-radius:9px;
+    background:var(--accent-soft); color:var(--accent-ink); cursor:pointer; text-align:left; white-space:nowrap;
+  }
+  .guide-btn span{ display:flex; flex-direction:column; line-height:1.3; }
+  .guide-btn b{ font-size:12px; }
+  .guide-btn small{ font-family:var(--font-data); font-size:10.5px; color:var(--muted); }
+  .guide-btn svg{ width:15px; height:15px; flex-shrink:0; }
+  .guide-btn:hover{ background:var(--accent); color:var(--on-accent); }
+  .guide-btn:hover small{ color:var(--on-accent); }
+  .guide-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .dlg-note{ margin:0 0 14px; padding:10px 12px; border-radius:10px; background:var(--mid-soft); color:var(--ink); font-size:12.5px; line-height:1.6; }
+  .dlg-note b{ color:var(--mid); }
+  .src{ font-size:11px; color:var(--muted); }
+  .src a{ color:var(--accent); }
+  .src .src-type{ font-weight:700; padding:0 5px; border-radius:4px; margin-right:4px; }
+  .src .src-type.official{ background:var(--low-soft); color:var(--low); }
+  .src .src-type.repost{ background:var(--surface-2); color:var(--muted); }
+  button.icon-link{ border:none; cursor:pointer; }
+  button.pill-link{ border:none; cursor:pointer; }
+  button.cal-chip{ border:none; text-align:left; cursor:pointer; font-family:inherit; width:100%; }
+  button.cal-chip.exam:hover{ background:var(--high); color:var(--surface); }
+  .exam-btn:focus-visible, button.cal-chip:focus-visible, .year-btn:focus-visible, .file-act:focus-visible, .dlg-close:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* 기출문제 팝업 */
+  dialog.pdf-dlg{
+    width:min(600px, calc(100vw - 32px)); max-height:min(86vh, 760px); padding:0; border:1px solid var(--line);
+    border-radius:18px; background:var(--surface); color:var(--ink); box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  dialog.pdf-dlg::backdrop{ background:rgba(13,18,32,.55); }
+  .dlg-inner{ display:flex; flex-direction:column; max-height:inherit; }
+  .dlg-head{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:18px 20px 14px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:var(--on-accent);
+  }
+  .dlg-head h2{ margin:0; font-family:var(--font-display); font-weight:400; font-size:20px; line-height:1.3; }
+  .dlg-head p{ margin:4px 0 0; font-size:12px; opacity:.9; }
+  .dlg-close{
+    flex-shrink:0; width:36px; height:36px; border-radius:10px; border:none; cursor:pointer;
+    background:rgba(255,255,255,.2); color:var(--on-accent); font-size:18px; line-height:1;
+  }
+  .dlg-close:hover{ background:rgba(255,255,255,.35); }
+  .dlg-body{ padding:16px 20px 6px; overflow-y:auto; }
+  .year-label{ font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.05em; margin:0 0 8px; }
+  .year-bar{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+  .year-btn{
+    min-height:36px; padding:6px 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface-2);
+    color:var(--ink); font-family:var(--font-data); font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .year-btn small{ font-family:var(--font-body); font-weight:500; color:var(--muted); margin-left:3px; font-size:11px; }
+  .year-btn[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); }
+  .year-btn[aria-pressed="true"] small{ color:var(--on-accent); opacity:.85; }
+  .file-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .file{
+    display:grid; grid-template-columns:1fr auto; gap:8px 12px; align-items:center;
+    padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
+  }
+  .file-info{ min-width:0; display:flex; flex-direction:column; gap:4px; }
+  .file-name{ font-size:13.5px; font-weight:700; line-height:1.45; }
+  .kind{ align-self:flex-start; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:5px; }
+  .kind.exam{ background:var(--high-soft); color:var(--high); }
+  .kind.guide{ background:var(--accent-soft); color:var(--accent-ink); }
+  .kind.mock{ background:var(--low-soft); color:var(--low); }
+  .kind.info{ background:var(--surface-2); color:var(--muted); }
+  .file-acts{ display:flex; gap:6px; }
+  .file-act{
+    display:inline-flex; align-items:center; justify-content:center; gap:4px; min-height:36px; padding:6px 12px;
+    border-radius:9px; font-size:12px; font-weight:700; text-decoration:none; white-space:nowrap;
+    background:var(--surface-2); color:var(--ink);
+  }
+  .file-act.dl{ background:var(--accent); color:var(--on-accent); }
+  .file-act:hover{ filter:brightness(1.08); }
+  .file-act svg{ width:13px; height:13px; }
+  @media (max-width:480px){
+    .file{ grid-template-columns:1fr; }
+    .file-acts .file-act{ flex:1; }
+  }
+  .dlg-foot{ padding:12px 20px 18px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; border-top:1px solid var(--line); margin-top:12px; }
+  .dlg-foot p{ margin:0; font-size:11.5px; color:var(--muted); line-height:1.5; max-width:40ch; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="mode-tabs" role="tablist" aria-label="수시·정시 전환">
+    <button type="button" role="tab" class="mode-tab" id="tab-susi" aria-controls="panel-susi" aria-selected="true">수시 <small>논술전형</small></button>
+    <button type="button" role="tab" class="mode-tab" id="tab-jeongsi" aria-controls="panel-jeongsi" aria-selected="false" tabindex="-1">정시 <small>수능위주</small></button>
+  </div>
+
+  <div class="panel" id="panel-susi" role="tabpanel" aria-labelledby="tab-susi">
+  <header class="hero">
+    <p class="eyebrow">2027학년도 수시모집 · 논술전형</p>
+    <h1>학교별 일정 / 모집요강 / 논술가이드북 / 기출문제</h1>
+    <p style="margin:12px 0"><a href="지원 학교별 출제 경향.html">지원 학교별 출제 경향 · 남은 5개 대학 통합 보기 →</a></p>
+    <p class="sub">6개 학교의 논술전형 경쟁률과 11~12월 일정을 한곳에 모았습니다. 맨 아래에서 학교별 입실시간·고사시간·고사장까지 확인할 수 있습니다.</p>
+    <div class="todo" id="todo"></div>
+  </header>
+
+  <section class="table-card card" aria-labelledby="h-cal">
+    <div class="section-head">
+      <span class="section-badge">01</span>
+      <div class="section-head-text">
+        <h2 id="h-cal">한눈에 보는 주요 일정</h2>
+        <p class="sub">11월과 12월 일정입니다. ‘예정’은 대학이 시각을 예정으로 안내한 일정입니다.</p>
+      </div>
+    </div>
+    <div class="cal-legend">
+      <span><i class="dot suneung"></i>수능</span>
+      <span><i class="dot venue"></i>고사장/시간 안내</span>
+      <span><i class="dot exam"></i>논술고사일</span>
+      <span><i class="dot result"></i>합격자 발표</span>
+      <span><i class="dot today"></i>오늘</span>
+    </div>
+    <div id="calendar"></div>
+  </section>
+
+  <section class="table-card card" aria-labelledby="h-ratio">
+    <div class="section-head">
+      <span class="section-badge">02</span>
+      <div class="section-head-text">
+        <h2 id="h-ratio">학교별 입학원서, 논술가이드북, 수험표, 경쟁률</h2>
+        <p class="sub">화살표 아이콘을 누르면 연결됩니다. 논술가이드북 칸을 누르면 학년도별 PDF를 내려받을 수 있고, 최저학력기준을 누르면 전체 조건이 펼쳐집니다.</p>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table id="ratioTable">
+        <caption class="sr-only">학교별 링크, 최저학력기준, 모집·지원 인원과 접수 경쟁률 및 수능최저 반영 실질경쟁률</caption>
+        <thead>
+          <tr>
+            <th scope="col">학교 · 학과</th>
+            <th scope="col">유의사항</th>
+            <th scope="col">입학원서<br>(수험표)</th>
+            <th scope="col">논술가이드북<br>(기출문제)</th>
+            <th scope="col">최저학력기준</th>
+            <th scope="col" class="num">모집</th>
+            <th scope="col" class="num">지원</th>
+            <th scope="col" class="num">경쟁률</th>
+            <th scope="col" class="num">수능최저 반영<br>예상 실질경쟁률(2027)</th>
+          </tr>
+        </thead>
+        <tbody id="ratioBody"></tbody>
+      </table>
+    </div>
+    <p class="sub" style="padding:0 20px 16px;margin:10px 0 0">실질경쟁률 = <b>수능최저를 충족한 논술 응시자 수 ÷ 모집인원</b>. 2026.11.20 현재 올해 실제 인원은 미확정입니다. 예상치는 <b>최근 3개 학년도(2024~2026)의 합산 충족 응시 인원 ÷ 합산 접수 인원 × 올해 접수 경쟁률</b>로 계산했습니다. 국민대는 논술 신설로 1개년만 적용하고, 자료 부족 학교는 산출을 보류했습니다. 연도별 적용 범위는 신뢰구간이 아닙니다. 가은이의 최저 충족 여부와 전체 지원자의 충족률은 별개입니다. 인원 계산기에 입력한 값은 대학 공식 확정 수치가 아닙니다.</p>
+  </section>
+
+  <section class="table-card card" aria-labelledby="h-sched">
+    <div class="section-head">
+      <span class="section-badge">03</span>
+      <div class="section-head-text">
+        <h2 id="h-sched">학교별 논술 일정</h2>
+        <p class="sub">다가오는 시험일 순서이고, 이미 끝난 시험은 맨 아래에 있습니다. 학교명을 누르면 대중교통 길찾기가 열립니다.</p>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table id="scheduleTable">
+        <caption class="sr-only">학교별 고사장 안내일, 논술고사일, 남은 날, 합격자 발표일</caption>
+        <thead>
+          <tr>
+            <th scope="col">학교 · 학과</th>
+            <th scope="col">고사장/시간 안내</th>
+            <th scope="col">논술고사일</th>
+            <th scope="col">남은 날</th>
+            <th scope="col">합격자 발표</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="table-card card" aria-labelledby="h-detail">
+    <div class="section-head">
+      <span class="section-badge">04</span>
+      <div class="section-head-text">
+        <h2 id="h-detail">학교별 상세 일정</h2>
+        <p class="sub">입실시간·고사시간·고사장과 단계별 진행 상황입니다. 고사장 안내일이 지났는데 내용이 비어 있으면 ‘확인 필요’로 표시됩니다.</p>
+      </div>
+    </div>
+    <div class="detail-grid" id="detailGrid"></div>
+  </section>
+
+  <p class="footnote" id="footnote"></p>
+  </div>
+
+  <div class="panel" id="panel-jeongsi" role="tabpanel" aria-labelledby="tab-jeongsi" hidden>
+    <header class="hero">
+      <p class="eyebrow">2027학년도 정시모집 · 수능위주</p>
+      <h1>수능 이후 일정 / 수시 최저 확인 / 정시 지원 준비</h1>
+      <p class="sub">수능부터 정시 추가모집까지의 공통 일정과, 수능 등급으로 수시 최저 충족 여부를 바로 확인하는 계산기를 모았습니다.</p>
+      <div class="todo" id="todoJ"></div>
+    </header>
+
+    <section class="table-card card" aria-labelledby="h-jtl">
+      <div class="section-head">
+        <span class="section-badge">01</span>
+        <div class="section-head-text">
+          <h2 id="h-jtl">수능 이후 주요 일정</h2>
+          <p class="sub">대교협 공통 일정과 정시 대학입학정보박람회 공식 일정을 모았습니다. 원서 마감일과 시각은 대학마다 다르니 지원 대학 모집요강을 꼭 확인하세요.</p>
+        </div>
+      </div>
+      <ol class="jtl" id="jTimeline"></ol>
+    </section>
+
+    <section class="table-card card" aria-labelledby="h-calc">
+      <div class="section-head">
+        <span class="section-badge">02</span>
+        <div class="section-head-text">
+          <h2 id="h-calc">수능 등급 입력 → 수시 최저 충족 확인</h2>
+          <p class="sub">가채점이나 성적표 등급을 넣으면 6개 대학 수시 논술의 최저학력기준 충족 여부를 바로 보여 줍니다. 입력값은 이 기기에만 저장됩니다.</p>
+        </div>
+      </div>
+      <div class="calc-inputs" id="calcInputs"></div>
+      <ul class="calc-out" id="calcOut"></ul>
+      <p class="calc-note">탐구는 두 과목 중 더 좋은 등급 1개를 씁니다. 가채점 등급은 실제 성적과 다를 수 있고, 한국사 응시 등 세부 조건은 각 대학 모집요강에서 확인하세요.</p>
+    </section>
+
+    <section class="table-card card" aria-labelledby="h-jsch">
+      <div class="section-head">
+        <span class="section-badge">03</span>
+        <div class="section-head-text">
+          <h2 id="h-jsch">2027 정시 한눈에</h2>
+          <p class="sub">전국 공통 기준입니다. 지원 대학·학과가 정해지면 해당 대학 모집요강에서 아래 항목을 확인하세요.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat-label">정시 모집인원</span><span class="stat-num">68,134<small>명</small></span><span class="stat-sub">전체 345,717명 중 19.7%</span></div>
+        <div class="stat"><span class="stat-label">그중 수능위주</span><span class="stat-num">63,195<small>명</small></span><span class="stat-sub">실기/실적위주 4,574명</span></div>
+        <div class="stat"><span class="stat-label">지원 가능 횟수</span><span class="stat-num">최대 3<small>회</small></span><span class="stat-sub">가·나·다군별 1회씩</span></div>
+        <div class="stat"><span class="stat-label">원서접수</span><span class="stat-num">1.4~1.7</span><span class="stat-sub">대학별 3일 이상 · 마감 시각 대학마다 다름</span></div>
+      </div>
+      <h3 class="mini-h">지원 대학을 고를 때 모집요강에서 확인할 항목</h3>
+      <ul class="howto">
+        <li><b>모집군</b><span>가·나·다군 중 어디인지. 같은 군의 대학은 한 곳만 지원할 수 있습니다.</span></li>
+        <li><b>수능 반영 영역과 비율</b><span>국어·수학·영어·탐구를 각각 몇 %씩 반영하는지</span></li>
+        <li><b>활용 점수</b><span>표준점수인지 백분위인지, 탐구 변환표준점수를 쓰는지</span></li>
+        <li><b>영어·한국사 반영 방식</b><span>등급별 환산점수 또는 가산·감점 방식</span></li>
+        <li><b>학교폭력 조치사항 반영</b><span>2027학년도에는 수능위주를 포함한 모든 전형에 반영합니다(반영 방법은 대학 자율).</span></li>
+        <li><b>원서 마감일·시각</b><span>1.4~1.7 중 대학마다 다릅니다.</span></li>
+      </ul>
+    </section>
+
+    <section class="table-card card" aria-labelledby="h-check">
+      <div class="section-head">
+        <span class="section-badge">04</span>
+        <div class="section-head-text">
+          <h2 id="h-check">수능 이후 체크리스트</h2>
+          <p class="sub">끝낸 항목을 눌러 체크하세요. 체크 상태는 이 기기에만 저장됩니다.</p>
+        </div>
+      </div>
+      <ul class="checklist" id="checklist"></ul>
+    </section>
+
+    <p class="footnote">일정·모집인원·지원 규칙 출처: 한국대학교육협의회 「2027학년도 대학입학전형 시행계획 주요사항」(2025.4.30)·「2027학년도 대학입학전형 기본사항」(2024.8)을 정리한 <a href="https://www.kyobit.com/news/articleView.html?idxno=4750" target="_blank" rel="noopener">교육을 비추다 기사</a>, 수능 성적 통지일(12.11)은 <a href="https://www.kyobit.com/news/articleView.html?idxno=7856" target="_blank" rel="noopener">같은 매체 기사</a> 기준입니다. 최저학력기준은 수시 탭의 각 대학 정보와 같습니다.</p>
+  </div>
+</div>
+
+<dialog class="pdf-dlg" id="pdfDlg" aria-labelledby="dlgTitle">
+  <div class="dlg-inner">
+    <div class="dlg-head">
+      <div><h2 id="dlgTitle"></h2><p id="dlgSub"></p></div>
+      <button type="button" class="dlg-close" id="dlgClose" aria-label="닫기">✕</button>
+    </div>
+    <div class="dlg-body">
+      <p class="dlg-note" id="dlgNote" hidden></p>
+      <p class="year-label" id="yearLabel">학년도 선택</p>
+      <div class="year-bar" id="yearBar" role="group" aria-labelledby="yearLabel"></div>
+      <ul class="file-list" id="fileList"></ul>
+    </div>
+    <div class="dlg-foot">
+      <p>‘다운로드’는 파일을 바로 받고, ‘미리보기’는 구글 드라이브에서 엽니다. 대학 입학처에서 바로 받는 파일은 미리보기 없이 다운로드만 있고, ZIP은 압축을 풀어 보세요.</p>
+      <a class="pill-link" id="dlgFolder" href="#" target="_blank" rel="noopener">드라이브 폴더 전체</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  /*
+    일정 데이터는 이곳 한 군데에만 적습니다. 일정표·달력·상세 카드·할 일은 모두 여기서 만들어집니다.
+    - 날짜: YYYY-MM-DD, 시각: "HH:MM" 또는 null
+    - tentative: 대학이 '예정'으로 안내한 일정
+    - venue.checked: 고사장 안내를 실제로 확인했으면 true
+    - exam의 campus/checkin/examTime/minutes가 null이면 아직 입력 전
+  */
+  const schoolData = {
+    "가천대학교": {
+      short: "가천대",
+      dept: "유아교육학과",
+      type: "논술 전형 (인문계열)",
+      updated: "9/11 최종(마감)",
+      notice: "https://apply.jinhakapply.com/Notice/1019071/A",
+      portal: "https://apply.jinhakapply.com/Payment/UnivPayResult/1019071",
+      drive: "https://drive.google.com/drive/folders/1wlrsttpDNsgEd7tggil-ZccqOCo9Mk1D",
+      mapDest: "가천대학교 글로벌캠퍼스 (경기도 성남시 수정구 성남대로 1342)",
+      cap:15, app:616, r:41.07,
+      minReq: "1개 영역 3등급",
+      minReqFull: "국어, 수학, 영어, 사회/과학탐구(1과목) 중 1개 영역 3등급 이내",
+      venue:  { date:"2026-10-26", time:null, what:"고사장 안내(개인별 조회)", tentative:false, checked:true },
+      exam:   { date:"2026-11-30", track:"인문계열", campus:"글로벌캠퍼스(성남)", checkin:"개인별 조회", examTime:null, minutes:80,
+                note:"※ 입학처 10.26 「2027학년도 수시 논술 전형 고사장 안내」: 11.30(월) 인문계열, 고사장소 가천대(성남), 시험시간 80분. 고사건물·입실시간은 수험번호로 개인별 조회 — <a href=\"https://pims.jinhakapply.com/Pass/PassLogin.aspx?Code=D3833DADF34E4474BCEB619547E640A0\" target=\"_blank\" rel=\"noopener\">논술 고사장 확인</a>. 건물 입장은 입실시간 30분 전부터, 시험은 입실시간 30분 뒤 시작, 입실시간 이후 출입구 폐쇄. 신분증·검은색 펜·수험표 지참, 교내 차량 출입 전면 통제." },
+      result: { date:"2026-12-18", time:null, tentative:false }
+    },
+    "동덕여자대학교": {
+      short: "동덕여대",
+      dept: "문예창작전공",
+      type: "논술우수자전형",
+      updated: "9/11 최종(마감)",
+      portal: "https://ipsi3.uwayapply.com/2027/susi2/dongduk/?CHA=1&UM",
+      drive: "https://drive.google.com/drive/folders/1YIveWvT3C-vS9UolrDiG0gRem5bp-J0L",
+      mapDest: "동덕여자대학교 (서울특별시 성북구 화랑로13길 60)",
+      cap:8, app:77, r:9.63,
+      minReq: "2개 영역 합6",
+      minReqFull: "국어, 영어, 수학, 탐구(상위 1과목) 중 2개 영역 등급 합 6 이내",
+      venue:  { date:"2026-11-25", time:"17:00", what:"고사장·시간 안내", tentative:true, checked:false },
+      exam:   { date:"2026-11-28", campus:null, checkin:null, examTime:null, minutes:null,
+                note:"입실시간·고사시간·고사장은 11.25 안내 후 입력 예정입니다. 합격자 발표: 입학처 11.17 「충원합격자 발표 일정 안내」 — 논술우수자 최초합격 12.18(금) 17시, 1차 충원 12.24(목) 14시 예정." },
+      result: { date:"2026-12-18", time:"17:00", tentative:false }
+    },
+    "가톨릭대학교": {
+      short: "가톨릭대",
+      dept: "사회학과",
+      type: "논술전형",
+      updated: "9/11 최종(마감)",
+      notice: "https://apply.jinhakapply.com/Notice/1003038/A",
+      portal: "https://apply.jinhakapply.com/Payment/UnivPayResult/1003038",
+      drive: "https://drive.google.com/drive/folders/1J0gqA6BSRSJsL-34nkAgkRHloJ_KyEf-",
+      mapDest: "가톨릭대학교 성심교정 (경기도 부천시 원미구 지봉로 43)",
+      cap:4, app:263, r:65.75,
+      minReq: "없음",
+      minReqFull: "없음 (약학과·의예과·간호학과만 적용)",
+      venue:  { date:"2026-10-08", time:null, what:"고사장 상세 안내", tentative:false, checked:true },
+      exam:   { date:"2026-10-11", track:"인문사회계열 전 모집단위", campus:"성심교정",
+                checkin:"13:30~14:30", examTime:"15:00~16:30", minutes:90 },
+      result: { date:"2026-12-18", time:"16:00", tentative:false }
+    },
+    "삼육대학교": {
+      short: "삼육대",
+      dept: "상담심리학과",
+      type: "논술우수자전형",
+      updated: "9/11 최종(마감)",
+      portal: "https://ipsi.uwayapply.com/outlink/?EncParam=OWZ3sWd9NYztE2BG00dp6MxFdkBgW2TPqnXHg0d2qeQ%3D",
+      drive: "https://drive.google.com/drive/folders/1wrxjxqNxiSoLqS0laEDc7zxmaHM5RL0M",
+      mapDest: "삼육대학교 (서울특별시 노원구 화랑로 815)",
+      cap:8, app:273, r:34.13,
+      minReq: "1개 영역 3등급",
+      minReqFull: "국어, 영어, 수학, 탐구(1과목) 중 1개 영역 3등급 이내",
+      venue:  { date:"2026-11-18", time:null, what:"고사장·고사일시 안내(개인별 조회)", tentative:false, checked:true },
+      exam:   { date:"2026-11-23", campus:null, checkin:"08:50~09:20", examTime:"10:00~11:20", minutes:80,
+                note:"※ 입학처가 11.18 「2027학년도 논술고사 고사장 및 고사일시 안내」를 열었습니다. 고사장·입실시간은 생년월일·수험번호·이름으로 개인별 조회 — <a href=\"https://pims.jinhakapply.com/Pass/PassLogin.aspx?Code=4AE269DAE5D943F0BE5E76031E62A7DC\" target=\"_blank\" rel=\"noopener\">고사장 및 고사일시 조회</a>. 조회 화면 안내: 수험생 외 학부모 입실 불가, 입실시간 엄수." },
+      result: { date:"2026-12-15", time:"14:00", tentative:true }
+    },
+    "국민대학교": {
+      short: "국민대",
+      dept: "국어국문학전공",
+      type: "논술(논술전형)",
+      updated: "9/11 최종(마감)",
+      portal: "https://ipsi2.uwayapply.com/2027/susi2/kookmin/?CHA=1",
+      drive: "https://drive.google.com/drive/folders/139GeHlNoeOGHaAn6pFAbmghE_qQ_Gs-Y",
+      mapDest: "국민대학교 (서울특별시 성북구 정릉로 77)",
+      cap:2, app:363, r:181.50,
+      minReq: "2개 영역 합6",
+      minReqFull: "국어, 수학, 영어, 탐구(사회/과학 중 상위 1과목) 중 2개 영역 등급 합 6 이내",
+      venue:  { date:"2026-11-30", time:"14:00", what:"고사장·시간 안내", tentative:true, checked:false },
+      exam:   { date:"2026-12-05", campus:null, checkin:"14:20까지 (오후반)", examTime:"15:00~16:30", minutes:90,
+                note:"※ 입실·고사시간은 입학처 「2027학년도 논술전형 모집단위별 고사시간 안내」 기준. 개인별 고사장은 11.30(월) 14:00 입학처 홈페이지에 공지 예정" },
+      result: { date:"2026-12-18", time:"17:00", tentative:true }
+    },
+    "덕성여자대학교": {
+      short: "덕성여대",
+      dept: "글로벌융합대학(인문사회)",
+      type: "논술전형[논술위주]",
+      updated: "9/11 최종(마감)",
+      notice: "https://apply.jinhakapply.com/Notice/1053063/A",
+      portal: "https://apply.jinhakapply.com/Payment/UnivPayResult/1053063",
+      drive: "https://drive.google.com/drive/folders/1TkDO6LSTubLR1D04vTrZ8BsZWBtJB7DY",
+      mapDest: "덕성여자대학교 (서울특별시 도봉구 삼양로144길 33)",
+      cap:65, app:5515, r:84.85,
+      minReq: "2개 영역 합7",
+      minReqFull: "국어, 수학, 영어, 탐구(사회/과학 중 상위 1과목) 중 2개 영역 등급 합 7 이내 (영어는 제2외국어/한문으로 대체 가능)",
+      venue:  { date:"2026-11-24", time:null, what:"수험생별 고사장 안내", tentative:false, checked:false },
+      exam:   { date:"2026-11-29", track:"인문·사회계열 (오후)", campus:null, checkin:"12:30~14:00", examTime:"14:30~16:00", minutes:90,
+                note:"※ 입실·고사시간은 입학처 8.5 「2027학년도 수시모집 논술전형 논술고사 일정 안내」 기준 (14:00~14:30 수험생 확인·유의사항·답안지 배부). 수험생별 고사장은 11.24(화) 입학 홈페이지(<a href=\"https://enter.duksung.ac.kr/\" target=\"_blank\" rel=\"noopener\">enter.duksung.ac.kr</a>) 게시 예정" },
+      result: { date:"2026-12-18", time:"17:00", tentative:false }
+    }
+  };
+
+  /*
+    학교별 기출문제·가이드북 PDF (구글 드라이브 파일 ID)
+    [학년도, 종류, 이름, 파일ID]  종류: exam=기출문제, guide=가이드북, mock=모의논술, info=안내자료
+  */
+  const PAST = {
+    "가천대학교": [
+      [2027,"guide","2027 논술 가이드 (2026 기출 수록)","1OqPe2zs9prj9-vqJch40WekrPt3Ot9_q"],
+      [2027,"mock","모의논술 A형 문제 (국어 4·수학 4, 인문·자연 공통)","https://admission.gachon.ac.kr/upload/BBS0004/20260828094227B86T77.PDF"],
+      [2027,"mock","모의논술 B형 문제 (국어 4·수학 4, 인문·자연 공통)","https://admission.gachon.ac.kr/upload/BBS0004/20260828094227RHZADM.PDF"],
+      [2027,"mock","모의논술 해설 ZIP (A·B형 국어·수학 해설 PDF 4개)","https://admission.gachon.ac.kr/upload/BBS0004/20260828151911F2AVPB.ZIP"],
+      [2026,"guide","논술 가이드북","1knj0xxcyWBghT8BHbwrgypQjb0-HVzzh"],
+      [2026,"mock","모의논술","17vR1atV5u8Y98pJRpW2FPUnzjMvAFbUL"],
+      [2025,"exam","논술 문제·해설","1ck9Vz3Rit1CqoKLdKbO2WzOf-1Qq-3OU"],
+      [2025,"guide","논술 가이드북","1YZNtHHLNXLt4C4a_SqdOYBItJRxpy0uw"],
+      [2025,"mock","모의논술","1YbFJDZcOTF4AARUwLcOubxmLo1JMJY5N"],
+      [2024,"exam","논술 문제·해설","1kF_9sZYs6hItKlghkDv_J74KSOBwcWbX"],
+      [2024,"guide","논술 가이드북","1apM_sojk8TXM4XQ1q-9WH1dn6m7NK2eB"],
+      [2024,"mock","모의논술 문제·해설","1HA2f48Id3dp3Kvaet5U6hS3rtmOgpEIk"],
+      [2023,"exam","논술 문제·해설","1EC6m27_eq1L6LFeakwlG3rIQKTS1dWi9"],
+      [2023,"guide","논술 가이드북","1nCMFUOfQ6aFceIhVYDuuHY3crfp6njv6"],
+      [2023,"mock","모의논술 문제·해설","1LPoROL9Y2g-l4sUMoCiLxT-35gq4aLXJ"],
+      [2022,"exam","논술 문제·해설","1nuVjojB42kkBgUBMsjN_I_AQZ4Dv94b6"],
+      [2022,"guide","논술 가이드북","1yZY1yPqCYdrzroCWDnTTYnnJqwmGDCSQ"]
+    ],
+    "동덕여자대학교": [
+      [2027,"guide","약술형 예시문제와 해설 가이드북","1trEWCjc8i_Ot06G-HMxKQjn45FDZI3u0"],
+      [2027,"info","수시 면접·논술·실기고사 일정 안내 (7/30)","1K324BCEGkCJl0lMn7NNq1NgFHLOy5nVL"],
+      [2026,"exam","기출 인문사회 I","1Ea-NG9vkpGyXHAqKchE8ZUoC9-8y7QAC"],
+      [2026,"exam","기출 인문사회 II","1g0mxfLWSjeq6HnHfQBVlfjxk2nBILuAe"],
+      [2026,"exam","기출 해설·문항카드","1srC2k94mfDZzpDJxmggitBqRhznmVWk3"],
+      [2026,"mock","모의논술 문제와 해설 가이드북","125xKCsZIJsqnEq7EFCck0WOfiwW8Jmri"],
+      [2025,"exam","기출문제와 문항카드","1LtLCxJ8FRjSinGhjhcjt4lHjLRtPZnDS"],
+      [2025,"mock","모의논술 문제와 해설 가이드북","1C9TZqnOdkPl0v0Y9c7wjyfi-x4r-RBWv"],
+      [2024,"exam","기출문제와 문항카드","1lZxZwSi_lg3Nc5uQPhyI8HsdkH3dsCSQ"]
+    ],
+    "가톨릭대학교": [
+      [2027,"guide","논술전형 가이드북","1okUTXyYBOuZL1Uq9ETeonKMEpEi1XIDf"],
+      [2027,"mock","모의논술 가이드북","1q5OrPBOupseynIyscxf7TdkE3b9DXSe9"],
+      [2026,"guide","논술전형 가이드북","1Sa8ugvTfFuuJhNbHc5paXdQFC58Gesod"],
+      [2026,"mock","모의논술 가이드북","1Lk4nXXLjhYTzmTMUiTK307HzwMbvccE4"],
+      [2025,"guide","논술전형 가이드북","1l-NJLscZAxoSjthBRNpWQwZRArQ0CYej"],
+      [2025,"mock","모의논술 가이드북","19VSJXSqufp0N4y47RrGR_TJQ-uhvNOPU"],
+      [2024,"guide","논술전형 가이드북","1oZpyg-Xioz0DtBXPo-Rq1HR7FaK0Opri"],
+      [2024,"mock","모의논술 가이드북","1buqM8lGPSKaHS_jrSHAe9Vp4KomDfrma"]
+    ],
+    "삼육대학교": [
+      [2026,"exam","기출문제 (인문) · 영향평가 부록","1nIy-9_ChVyO3_L0Y8GfD3SqxfSprJTxm"],
+      [2026,"exam","기출 및 해설 (2027 논술가이드북)","13W0A0TodLAvza9apIeh_z-6_0eobK9QE"],
+      [2025,"exam","인문 기출 정답·채점기준","1SKzbLf7drByhZ585532vZ7RugnLF-m6b"],
+      [2025,"guide","논술가이드북 (2024 기출 수록)","1vSgNhBC27rjbcp4j8O3Es1ImBRfPbKOB"],
+      [2024,"exam","기출 및 해설","1FPLDO6fMuh-S7JXYM_lOeYdK16OQc5aA"],
+      [2024,"mock","모의논술 문제와 정답","1kcp-vZRpHW7Je0TaYfWmsoRxfwxk2EKT"]
+    ],
+    "국민대학교": [
+      [2027,"guide","논술가이드북 (2026 논술 결과·출제기준·기출 수록)","https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2172"],
+      [2027,"info","논술전형 모집단위별 고사시간 안내","https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2196"],
+      [2026,"exam","선행학습 영향평가 보고서 (논술 문항·문항카드, 부록 39쪽~)","https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2168"],
+      [2026,"guide","논술가이드북 (입학처 공식 파일)","https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2094"],
+      [2026,"exam","오전 · 인문 국어","1Y1_9UIXRoCRcu2ZGbOoUEhxH2Y9twuFq"],
+      [2026,"exam","오전 · 인문 수학 (1문항 출제 범위 이탈로 전원 만점)","1rNnm8QSTzHEoX9aDIZ1sH2Y0A48P5FFb"],
+      [2026,"exam","오후1 · 인문 국어","17IGgJsLradIOYGOXLpnw0oKcgJINSZhq"],
+      [2026,"exam","오후1 · 인문 수학","1jTw5o26f2WStkfsJG3uON3Xshgtw11_V"],
+      [2026,"exam","오후2 · 인문 국어","1tes5bo3vWgxFgyPQy9imOPveLu-XSL7J"],
+      [2026,"exam","오후2 · 인문 수학","1nEq5MICVphEkDMNmqin9lcA1OFyStEss"]
+    ],
+    "덕성여자대학교": [
+      [2027,"guide","논술가이드북","1waExYBWGTP37MxFaQY8irb6h-7EYIVkg"],
+      [2027,"mock","온라인 모의논술고사 해설집","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=992&menu=boardfile"],
+      [2026,"exam","논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=964&menu=boardfile"],
+      [2026,"mock","온라인 모의논술고사 해설집","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=865&menu=boardfile"],
+      [2025,"exam","논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=862&menu=boardfile"],
+      [2025,"mock","온라인 모의논술고사 해설집","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=752&menu=boardfile"],
+      [2024,"exam","논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=728&menu=boardfile"],
+      [2024,"mock","모의논술고사 해설집","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=612&menu=boardfile"],
+      [2023,"exam","논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)","https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=579&menu=boardfile"],
+      [2027,"info","수시 모집요강","1NhHmQQWB_8wtLFwBXMgHDPsyOJMkIWVI"],
+      [2026,"guide","논술가이드북","1ZY3mbL2cB4sMEl484ZmSH5N_UBKVuSJF"],
+      [2025,"guide","논술가이드북 (단면)","1H8O8S6wN4ve2dA0btuzpXGUqz6KaAodo"],
+      [2024,"guide","논술가이드북","1ANCPem_HaG5SNoUmN6uiBC6BRrXTyRbN"],
+      [2023,"guide","논술가이드북","1n6uTz9WcGf6YXDcvv4NZpkxEUK7NCgAI"]
+    ]
+  };
+  // 출처 (드라이브 폴더의 자료목록_출처.txt 기준). [주소, "공식" | "재게시"]
+  const CUK = seq => [`https://ipsi.catholic.ac.kr/detail.do?menuurl=1HQVVMcjyX0%2FK4Lre9qaHA%3D%3D&board_seq=${seq}&categoryid=43`, "공식"];
+  const DDU = id => [`https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=${id}&schM=view`, "공식"];
+  const GCU_MOCK = "https://admission.gachon.ac.kr/admission/html/counsel/noticeView.asp?BOARD_IDX=32292&s_cate=BBS0401";
+  const DSF = no => `https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=${no}&menu=boardfile`;
+  const DSP = (board, bn) => [`https://enter.duksung.ac.kr/${board}/view.php?bn=${bn}`, "공식"];
+  const SRC = {
+    // 가톨릭대
+    "1okUTXyYBOuZL1Uq9ETeonKMEpEi1XIDf":CUK(37609), "1q5OrPBOupseynIyscxf7TdkE3b9DXSe9":CUK(37609),
+    "1Sa8ugvTfFuuJhNbHc5paXdQFC58Gesod":CUK(36212), "1Lk4nXXLjhYTzmTMUiTK307HzwMbvccE4":CUK(36212),
+    "1l-NJLscZAxoSjthBRNpWQwZRArQ0CYej":CUK(32980), "19VSJXSqufp0N4y47RrGR_TJQ-uhvNOPU":CUK(32980),
+    "1oZpyg-Xioz0DtBXPo-Rq1HR7FaK0Opri":CUK(30916), "1buqM8lGPSKaHS_jrSHAe9Vp4KomDfrma":CUK(30916),
+    // 동덕여대
+    "1trEWCjc8i_Ot06G-HMxKQjn45FDZI3u0":DDU(91947),
+    "1Ea-NG9vkpGyXHAqKchE8ZUoC9-8y7QAC":DDU(91641), "1g0mxfLWSjeq6HnHfQBVlfjxk2nBILuAe":DDU(91641), "1srC2k94mfDZzpDJxmggitBqRhznmVWk3":DDU(91641),
+    "125xKCsZIJsqnEq7EFCck0WOfiwW8Jmri":DDU(90261),
+    "1LtLCxJ8FRjSinGhjhcjt4lHjLRtPZnDS":DDU(89852), "1C9TZqnOdkPl0v0Y9c7wjyfi-x4r-RBWv":DDU(37475),
+    "1lZxZwSi_lg3Nc5uQPhyI8HsdkH3dsCSQ":DDU(37407),
+    // 국민대 (입학처 공지)
+    "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2172":["https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1065","공식"],
+    "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2196":["https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1078","공식"],
+    "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2168":["https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1062","공식"],
+    // 가천대 (2027 가이드: 입학처 원본과 드라이브 파일이 같음 — SHA256 확인)
+    "1OqPe2zs9prj9-vqJch40WekrPt3Ot9_q":["https://admission.gachon.ac.kr/upload/BBS0024/20260616123153AZX4GY.PDF","공식"],
+    "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227B86T77.PDF":[GCU_MOCK,"공식"],
+    "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227RHZADM.PDF":[GCU_MOCK,"공식"],
+    "https://admission.gachon.ac.kr/upload/BBS0004/20260828151911F2AVPB.ZIP":[GCU_MOCK,"공식"],
+    // 덕성여대 (입학처 게시물 첨부)
+    [DSF(992)]:DSP("notice",7107), [DSF(865)]:DSP("notice",5393), [DSF(752)]:DSP("notice",3501), [DSF(612)]:DSP("notice",2085),
+    [DSF(964)]:DSP("data",6939), [DSF(862)]:DSP("data",5369), [DSF(728)]:DSP("data",3432), [DSF(579)]:DSP("data",1882),
+    // 삼육대
+    "13W0A0TodLAvza9apIeh_z-6_0eobK9QE":["https://ipsi.syu.ac.kr/2016_syu/pages/index.asp?gd=01&p=96","공식"],
+    "1SKzbLf7drByhZ585532vZ7RugnLF-m6b":["https://mdsisite.tistory.com/1587","재게시"],
+    "1FPLDO6fMuh-S7JXYM_lOeYdK16OQc5aA":["https://kamdongmath.tistory.com/entry/2024-%EC%82%BC%EC%9C%A1%EB%8C%80-%EB%85%BC%EC%88%A0-%EA%B8%B0%EC%B6%9C","재게시"],
+    "1vSgNhBC27rjbcp4j8O3Es1ImBRfPbKOB":["https://kamdongmath.tistory.com/entry/2024-%EC%82%BC%EC%9C%A1%EB%8C%80-%EB%85%BC%EC%88%A0-%EA%B8%B0%EC%B6%9C","재게시"],
+    "1kcp-vZRpHW7Je0TaYfWmsoRxfwxk2EKT":["https://mdsisite1.tistory.com/503","재게시"]
+  };
+  // 학교별 공부 참고사항 (자료목록_출처.txt에 적힌 내용)
+  const STUDY_NOTE = {
+    "동덕여자대학교": "2027학년도부터 <b>약술형으로 바뀌어</b> 과거 기출과 유형이 다릅니다. 2027학년도 약술형 예시문제부터 보세요.",
+    "삼육대학교": "2027 가이드북에 2026학년도 인문·자연 기출과 해설이 함께 있으니 <b>인문 부분</b>을 보세요. 가이드북 표지 학년도와 수록된 기출 학년도는 다를 수 있습니다.",
+    "가톨릭대학교": "파일 이름은 게시 학년도 기준입니다. 실제 기출 학년도는 가이드북 목차를 확인하세요. 자연·의약 계열 문제가 함께 들어 있을 수 있습니다."
+  };
+  const KIND_TEXT = { exam:"기출문제", guide:"가이드북", mock:"모의논술", info:"안내" };
+  const KIND_ORDER = { exam:0, guide:1, mock:2, info:3 };
+  const pdfCount = school => (PAST[school] || []).length;
+  function pdfYears(school){
+    const ys = (PAST[school] || []).map(f => f[0]);
+    if (!ys.length) return "";
+    const lo = Math.min(...ys), hi = Math.max(...ys);
+    return lo === hi ? `${hi}` : `${lo}~${hi}`;
+  }
+
+  const SUNEUNG = { date:"2026-11-19", label:"대학수학능력시험" };
+  const EXTRA_EVENTS = [ { date:SUNEUNG.date, type:"suneung", label:"수능" } ];
+  const CAL_MONTHS = [ [2026, 10], [2026, 11] ]; // JS 월(0부터): 11월, 12월
+  const DOW = ["일","월","화","수","목","금","토"];
+
+  function parseDate(s){ const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); }
+  const TODAY = (() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); })();
+  function daysUntil(s){ return Math.round((parseDate(s) - TODAY) / 86400000); }
+  function fmt(s){ const d = parseDate(s); return `${d.getMonth()+1}.${d.getDate()}(${DOW[d.getDay()]})`; }
+  function dateState(s){ const n = daysUntil(s); return n < 0 ? "done" : n === 0 ? "now" : "upcoming"; }
+  const tentativeTag = ev => ev.tentative ? `<span class="tag">예정</span>` : "";
+  const timeText = ev => ev.time ? ` <span class="when-time">${ev.time}</span>` : "";
+
+  // 시험 정보(입실·고사시간) 상태: 입력됨 / 공지 전 / 확인 필요
+  function examInfoState(info){
+    if (info.exam.checkin) return "ok";
+    return daysUntil(info.venue.date) < 0 ? "check" : "pending";
+  }
+  // 고사장 안내 단계 상태: 확인했으면 완료, 날짜가 지났는데 미확인이면 확인 필요
+  function venueState(info){
+    if (info.venue.checked) return "done";
+    const n = daysUntil(info.venue.date);
+    return n < 0 ? "check" : n === 0 ? "now" : "upcoming";
+  }
+  const STATE_TEXT = { done:"완료", now:"오늘", upcoming:"예정", check:"확인 필요" };
+
+  function ddayPill(examDate){
+    const n = daysUntil(examDate);
+    if (n > 0) return `<span class="dday${n <= 7 ? " soon" : ""}">D-${n}</span>`;
+    if (n === 0) return `<span class="dday today">D-DAY</span>`;
+    return `<span class="dday done">시험 완료</span>`;
+  }
+
+  function tier(ratio){ return ratio < 15 ? "low" : ratio < 60 ? "mid" : "high"; }
+
+  const ORIGIN_NAME = "래미안 원베일리";
+  function transitDirectionsUrl(destName){
+    return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ORIGIN_NAME)}&destination=${encodeURIComponent(destName)}&travelmode=transit`;
+  }
+
+  const pdfIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 1.5h5.5L13 5v9.5H4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  const dlIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const linkIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const schools = Object.keys(schoolData);
+  // 다가오는 시험 먼저(날짜순), 끝난 시험은 맨 뒤로
+  const isExamPast = s => daysUntil(schoolData[s].exam.date) < 0;
+  const byExamDate = (a,b) => parseDate(schoolData[a].exam.date) - parseDate(schoolData[b].exam.date);
+  const schoolsByExam = [
+    ...schools.filter(s => !isExamPast(s)).sort(byExamDate),
+    ...schools.filter(isExamPast).sort(byExamDate)
+  ];
+  const nextSchool = schoolsByExam.find(s => !isExamPast(s));
+
+  // 모든 학교 일정을 하나의 이벤트 목록으로
+  function allEvents(){
+    const list = [];
+    schools.forEach(name => {
+      const info = schoolData[name];
+      list.push({ school:name, type:"venue", date:info.venue.date,
+        label:`${info.short} ${info.venue.what}`, time:info.venue.time, tentative:info.venue.tentative, checked:info.venue.checked });
+      list.push({ school:name, type:"exam", date:info.exam.date,
+        label:`${info.short} 논술고사`, time: info.exam.examTime ? info.exam.examTime.split("~")[0] : null });
+      list.push({ school:name, type:"result", date:info.result.date,
+        label:`${info.short} 합격자발표`, time:info.result.time, tentative:info.result.tentative });
+    });
+    EXTRA_EVENTS.forEach(e => list.push({ ...e }));
+    return list.sort((a,b) => parseDate(a.date) - parseDate(b.date));
+  }
+
+  function renderTodo(){
+    const el = document.getElementById("todo");
+    const items = [];
+    const events = allEvents().filter(e => e.school);
+
+    // 0) 수능
+    const sn = daysUntil(SUNEUNG.date);
+    if (sn >= 0){
+      items.push(`<div class="todo-item suneung"><span class="todo-label">수능 · ${sn === 0 ? "D-DAY" : `D-${sn}`}</span>
+        <span class="todo-main">${fmt(SUNEUNG.date)} ${SUNEUNG.label}</span>
+        <span class="todo-sub">최저기준: 삼육대·가천대 1개 영역 3등급 / 동덕여대·국민대 2개 합 6 / 덕성여대 2개 합 7</span></div>`);
+    }
+
+    // 1) 안내일이 지났는데 확인하지 않은 고사장 안내 (시험이 아직 남은 학교만)
+    const overdue = events.filter(e => e.type === "venue" && !e.checked && daysUntil(e.date) < 0 && !isExamPast(e.school));
+    if (overdue.length){
+      items.push(`<div class="todo-item warn"><span class="todo-label">확인 필요</span>
+        <span class="todo-main">${overdue.map(e => e.school).join(", ")} 고사장 안내</span>
+        <span class="todo-sub">안내일이 지났습니다. 대학 홈페이지에서 입실·고사시간과 고사장을 확인하세요.</span></div>`);
+    }
+
+    // 2) 오늘 이후 가장 가까운 할 일 (시험은 아래에서 따로 보여 줌)
+    const next = events.find(e => e.type !== "exam" && daysUntil(e.date) >= 0 && !(e.type === "venue" && e.checked));
+    if (next){
+      const info = schoolData[next.school];
+      const n = daysUntil(next.date);
+      const what = next.type === "venue" ? `${next.school} 고사장 안내 확인` : `${next.school} 합격자 발표 확인`;
+      const link = info.notice || info.portal;
+      items.push(`<div class="todo-item"><span class="todo-label">다음 할 일 · ${n === 0 ? "오늘" : `D-${n}`}</span>
+        <span class="todo-main">${fmt(next.date)}${next.time ? " " + next.time : ""} ${what}${tentativeTag(next)}</span>
+        <span class="todo-sub"><a href="${link}" target="_blank" rel="noopener">${info.notice ? "대학 공지 열기" : "원서접수 페이지 열기"}</a></span></div>`);
+    }
+
+    // 3) 다음 시험
+    if (nextSchool){
+      const info = schoolData[nextSchool];
+      const n = daysUntil(info.exam.date);
+      const time = info.exam.examTime ? ` ${info.exam.examTime}` : "";
+      const sub = info.exam.checkin ? `입실 ${info.exam.checkin} · ${info.exam.campus || `고사장 ${fmt(info.venue.date)} 공지`}` : `시간은 ${fmt(info.venue.date)} 안내 예정`;
+      items.push(`<div class="todo-item"><span class="todo-label">다음 논술 · ${n === 0 ? "오늘" : `D-${n}`}</span>
+        <span class="todo-main">${nextSchool} ${fmt(info.exam.date)}${time}</span>
+        <span class="todo-sub">${sub}</span></div>`);
+    } else {
+      items.push(`<div class="todo-item"><span class="todo-label">다음 논술</span><span class="todo-main">모든 논술고사가 끝났습니다.</span></div>`);
+    }
+    el.innerHTML = items.join("");
+  }
+
+  // 2024~2026 동일 모집단위의 접수 지원자 / 최저 충족 논술 응시자.
+  // 인원 합산 비율로 추정하며, 연도별 최솟값~최댓값은 신뢰구간이 아니다.
+  const EFFECTIVE_HISTORY = {
+    "삼육대": {rows:[[2024,150,62,5],[2025,181,56,5],[2026,353,128,7]], note:"상담심리학과 · 3개년 인원 합산", sources:[
+      ["2025 가이드 p.11 (2024 결과·재게시)","https://drive.google.com/file/d/1vSgNhBC27rjbcp4j8O3Es1ImBRfPbKOB/view"],
+      ["2026 가이드 p.10 (2025 결과·재게시)","https://cdn013.negagea.net/dgsmidc/omr/seoul/web/univ_info2025/%EC%82%BC%EC%9C%A1%EB%8C%80%ED%95%99%EA%B5%90/%EC%82%BC%EC%9C%A1%EB%8C%80%ED%95%99%EA%B5%90_2026%ED%95%99%EB%85%84%EB%8F%84_%EB%85%BC%EC%88%A0%EA%B0%80%EC%9D%B4%EB%93%9C%EB%B6%81.pdf"],
+      ["2027 공식 가이드 p.15 (2026 결과)","https://ipsi.syu.ac.kr/upload_data/guide/RF(0)_260527141648.pdf"]]},
+    "덕성여대": {rows:[[2024,3544,1722,55],[2025,3747,1711,55],[2026,3871,1799,65]], note:"글로벌융합대학 인문사회 · 3개년 인원 합산", sources:[["대학 제작 2027 가이드 p.15 (재게시)","https://drive.google.com/file/d/1waExYBWGTP37MxFaQY8irb6h-7EYIVkg/view"]]},
+    "국민대": {rows:[[2026,277,102,2]],note:"국어국문 · 2026 논술 신설, 1개년만 적용. 102명 = 실질 51.0 × 모집 2명",sources:[["2027 공식 가이드 p.6", "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2172"]]},
+    "가천대": {rows:[],note:"2024~2026 유아교육학과의 최저 충족 응시 인원을 확인하지 못해 산출 보류. 접수 경쟁률만으로 충족률을 추정하지 않음.",sources:[["공식 입시결과 자료실","https://admission.gachon.ac.kr/admission/html/counsel/result.asp"]]},
+    "동덕여대": {rows:[],note:"2024~2026 문예창작의 최저 충족 응시 인원 미확인. 2027 약술형 전환·최저 2합7→2합6으로 과거와 직접 비교도 어려움.",sources:[["공식 2027 논술가이드", "https://ipsi.dongduk.ac.kr/afile/fileDownload/jxrmn"]]}
+  };
+  function effectiveEstimate(school,info){
+    const key={"삼육대학교":"삼육대","덕성여자대학교":"덕성여대","국민대학교":"국민대","가천대학교":"가천대","동덕여자대학교":"동덕여대"}[school];
+    const h=EFFECTIVE_HISTORY[key];
+    if(!h) return `<b>최저 미적용</b><span class="ratio-time">고사 종료 · 이번 통계 추정에서 제외</span>`;
+    const sources=h.sources.map(([label,url])=>`<a href="${url}" target="_blank" rel="noopener">${label}</a>`).join("<br>");
+    if(!h.rows.length) return `<b>자료 부족 · 산출 보류</b><span class="ratio-time">${h.note}</span><details style="text-align:left;font-size:12px"><summary>확인 자료</summary>${sources}</details>`;
+    const app=h.rows.reduce((s,r)=>s+r[1],0), eligible=h.rows.reduce((s,r)=>s+r[2],0), q=eligible/app;
+    const qs=h.rows.map(r=>r[2]/r[1]), nominal=info.app/info.cap, estimate=nominal*q;
+    const range=h.rows.length>1?`연도별 비율 적용 범위 ${(nominal*Math.min(...qs)).toFixed(1)}~${(nominal*Math.max(...qs)).toFixed(1)} : 1`:"1개년뿐이므로 연도 변동 범위 산출 불가";
+    return `<span class="ratio-num" style="font-size:18px">약 ${estimate.toFixed(1)} : 1</span><span class="ratio-time">${h.rows.length}개년 기반 추정 · 실제값 아님</span><span class="ratio-time">${range}</span>
+    <details style="text-align:left;font-size:12px;margin-top:8px"><summary>연도별 근거·계산식</summary><p>${h.note}</p>
+    ${h.rows.map(r=>`<div>${r[0]}: 접수 ${r[1].toLocaleString()}명 → 충족 응시 ${r[2].toLocaleString()}명 (${(100*r[2]/r[1]).toFixed(1)}%) · 실질 ${(r[2]/r[3]).toFixed(2)} : 1</div>`).join("")}
+    <p>합산 ${eligible.toLocaleString()} ÷ ${app.toLocaleString()} = ${(q*100).toFixed(2)}%<br>올해 ${info.app} ÷ ${info.cap} × ${(q*100).toFixed(2)}% ≈ ${estimate.toFixed(1)} : 1</p>
+    <p>결시와 최저 미충족을 함께 반영. 범위는 과거 연도별 비율을 적용한 시나리오이며 통계적 신뢰구간·합격확률이 아닙니다. 올해 수능 난이도·고사 중복·지원자 구성 변화는 미반영.</p>${sources}</details>`;
+  }
+  function renderRatios(){
+    const body = document.getElementById("ratioBody");
+    body.innerHTML = "";
+    schoolsByExam.forEach(school => {
+      const info = schoolData[school];
+      const noticeCell = info.notice
+        ? `<a class="icon-link" href="${info.notice}" target="_blank" rel="noopener" aria-label="${school} 유의사항 열기">${linkIcon}</a>`
+        : `<span class="no-link" title="별도 유의사항 페이지가 없습니다. 입학원서 페이지를 확인하세요.">입학원서<br>참고</span>`;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <th scope="row" class="school-cell">${school}<span class="dept-sub">${info.dept} · ${info.type}</span></th>
+        <td>${noticeCell}</td>
+        <td><a class="icon-link" href="${info.portal}" target="_blank" rel="noopener" aria-label="${school} 입학원서·수험표 열기">${linkIcon}</a></td>
+        <td><button type="button" class="guide-btn" data-pdf="${school}" aria-label="${school} 논술가이드북·기출문제 자료 ${pdfCount(school)}개 열기">${pdfIcon}<span><b>자료 ${pdfCount(school)}개</b><small>${pdfYears(school)}</small></span></button></td>
+        <td><details class="minreq"><summary>${info.minReq}</summary><p>${info.minReqFull}</p></details></td>
+        <td class="num">${info.cap.toLocaleString("ko-KR")}</td>
+        <td class="num">${info.app.toLocaleString("ko-KR")}</td>
+        <td class="num"><span class="ratio-num ${tier(info.r)}">${info.r.toFixed(2)} : 1</span><span class="ratio-time">${info.updated} 기준</span></td>
+        <td class="num" style="min-width:220px;white-space:normal">
+          ${effectiveEstimate(school,info)}
+          <details style="margin-top:9px;text-align:left;font-size:12px">
+            <summary style="cursor:pointer">인원으로 계산</summary>
+            <label style="display:block;margin-top:9px">${info.minReq === "없음" ? "논술 응시자" : "최저 충족 논술 응시자"}(명)
+              <input type="number" min="0" max="${info.app}" step="1" data-effective-school="${school}" aria-label="${school} ${info.minReq === "없음" ? "논술 응시자" : "최저 충족 논술 응시자"} 수" placeholder="인원 입력" style="display:block;width:100%;max-width:180px;padding:7px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)">
+            </label>
+            <output data-effective-result="${school}" aria-live="polite" style="display:block;margin-top:7px">인원 입력 필요</output>
+            <small style="display:block;color:var(--muted)">입력값 계산 · 대학 공식 확정값 아님</small>
+          </details>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  document.getElementById("ratioBody").addEventListener("input", ev => {
+    const input = ev.target.closest("[data-effective-school]");
+    if (!input) return;
+    const info = schoolData[input.dataset.effectiveSchool];
+    const out = input.closest("td").querySelector("output");
+    const raw = input.value.trim(), count = Number(raw);
+    if (!raw) { out.textContent = "인원 입력 필요"; return; }
+    if (!Number.isInteger(count) || count < 0 || count > info.app) {
+      out.textContent = `0~${info.app.toLocaleString("ko-KR")}명 사이 정수를 입력하세요.`;
+      return;
+    }
+    out.textContent = `${(count / info.cap).toFixed(2)} : 1 (입력값 기준 · ${count.toLocaleString("ko-KR")}명 ÷ ${info.cap}명)`;
+  });
+
+  function renderSchedule(){
+    const body = document.getElementById("scheduleBody");
+    body.innerHTML = "";
+    schoolsByExam.forEach(school => {
+      const info = schoolData[school];
+      const v = info.venue, e = info.exam, r = info.result;
+      const past = isExamPast(school);
+      const examTime = e.examTime ? ` <span class="when-time">${e.examTime}</span>` : (e.memo ? ` ${e.memo}` : "");
+      const venueCell = past ? `<span class="no-link">완료</span>` : `${fmt(v.date)}${timeText(v)} ${v.what}${tentativeTag(v)}`;
+      const tr = document.createElement("tr");
+      if (past) tr.className = "row-past";
+      tr.innerHTML = `
+        <th scope="row" class="school-cell"><a class="school-link" href="${transitDirectionsUrl(info.mapDest)}" target="_blank" rel="noopener" aria-label="원베일리에서 ${school}까지 대중교통 길찾기">${school}</a><span class="dept-sub">${info.dept}</span></th>
+        <td>${venueCell}</td>
+        <td><button type="button" class="exam-btn" data-pdf="${school}" aria-label="${school} 논술고사 ${fmt(e.date)}, 기출문제 자료 ${pdfCount(school)}개 열기">${pdfIcon}${fmt(e.date)}${examTime}<span class="pdf-count">기출 ${pdfCount(school)}</span></button></td>
+        <td>${ddayPill(e.date)}</td>
+        <td>${fmt(r.date)}${timeText(r)}${tentativeTag(r)}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  function fact(label, value, extra, state){
+    if (!value){
+      return state === "check"
+        ? `<div class="fact"><dt>${label}</dt><dd class="check">확인 필요</dd></div>`
+        : `<div class="fact"><dt>${label}</dt><dd class="tbd">공지 전</dd></div>`;
+    }
+    return `<div class="fact"><dt>${label}</dt><dd>${value}${extra ? `<small>${extra}</small>` : ""}</dd></div>`;
+  }
+
+  function renderDetails(){
+    const grid = document.getElementById("detailGrid");
+    grid.innerHTML = "";
+    schoolsByExam.forEach(school => {
+      const info = schoolData[school];
+      const v = info.venue, e = info.exam, r = info.result;
+      const infoState = examInfoState(info);
+      const examPast = isExamPast(school);
+      const examLine = e.examTime ? `${e.examTime} (${e.minutes}분)` : "";
+
+      const steps = [
+        { cls:"venue", state:venueState(info), when:fmt(v.date), label:"고사장 안내",
+          text:`${v.time ? v.time + " · " : ""}${v.what}${v.tentative ? " (예정)" : ""}` },
+        { cls:"exam", state:dateState(e.date), when:fmt(e.date), label:"논술고사",
+          text: e.checkin ? `입실 ${e.checkin}${examLine ? ` · 고사 ${examLine}` : (e.minutes ? ` · 고사 ${e.minutes}분` : "")}` : (infoState === "check" ? "입실·고사시간 확인 필요" : "입실·고사시간은 고사장 안내 때 공지") },
+        { cls:"result", state:dateState(r.date), when:fmt(r.date), label:"합격자 발표",
+          text:`${r.time || ""}${r.tentative ? " (예정)" : ""}`.trim() }
+      ];
+
+      const stepsHtml = steps.map(st => `
+        <li class="step ${st.cls} ${st.state}"${st.state === "now" ? ' aria-current="step"' : ""}>
+          <span class="dot" aria-hidden="true"></span>
+          <span class="when">${st.when}</span>
+          <span class="what"><span class="label">${st.label}</span>${st.text ? `<span class="detail-text">${st.text}</span>` : ""}</span>
+          <span class="state">${STATE_TEXT[st.state]}</span>
+        </li>`).join("");
+
+      let note;
+      if (examPast) note = `<p class="detail-note past">논술고사를 마쳤습니다. 합격자 발표는 ${fmt(r.date)}${r.time ? " " + r.time : ""}입니다.</p>`;
+      else if (e.note) note = `<p class="detail-note pending">${e.note}</p>`;
+      else if (infoState === "ok") note = "";
+      else if (infoState === "check") note = `<p class="detail-note check">고사장 안내일(${fmt(v.date)})이 지났습니다. 대학 홈페이지에서 입실·고사시간과 고사장을 확인하세요.</p>`;
+      else note = `<p class="detail-note pending">입실시간·고사시간·고사장은 ${fmt(v.date)} 안내 후 입력 예정입니다.</p>`;
+
+      const card = document.createElement("article");
+      card.className = "detail" + (school === nextSchool ? " is-next" : "") + (examPast ? " is-past" : "");
+      card.innerHTML = `
+        <div class="detail-head">
+          <div><h3>${school}</h3><span class="dept-sub">${info.dept} · ${e.track || info.type}</span></div>
+          ${ddayPill(e.date)}
+        </div>
+        <dl class="facts">
+          ${fact("고사일", fmt(e.date) + (e.memo ? ` ${e.memo}` : ""))}
+          ${fact("고사장", e.campus, "", infoState)}
+          ${fact("입실시간", e.checkin, "", infoState)}
+          ${fact("고사시간", e.examTime, e.minutes ? `${e.minutes}분` : "", infoState)}
+        </dl>
+        <ol class="steps">${stepsHtml}</ol>
+        ${note}
+        <div class="detail-links">
+          ${examPast ? "" : `<a class="pill-link" href="${transitDirectionsUrl(info.mapDest)}" target="_blank" rel="noopener" title="${info.mapDest}">${e.campus ? "고사장 길찾기" : "대학 위치 길찾기"} ${linkIcon}</a>`}
+          ${info.notice ? `<a class="pill-link" href="${info.notice}" target="_blank" rel="noopener">대학 공지 ${linkIcon}</a>` : ""}
+          <a class="pill-link" href="${info.portal}" target="_blank" rel="noopener">${examPast ? "합격자 조회" : "수험표"} ${linkIcon}</a>
+          <button type="button" class="pill-link" data-pdf="${school}">${pdfIcon} 기출·가이드북 ${pdfCount(school)}개</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function renderCalendar(){
+    const root = document.getElementById("calendar");
+    root.innerHTML = "";
+    const byDate = {};
+    allEvents().forEach(ev => { (byDate[ev.date] = byDate[ev.date] || []).push(ev); });
+
+    CAL_MONTHS.forEach(([year, month], idx) => {
+      const strip = document.createElement("div");
+      strip.className = "cal-month-strip" + (idx === 0 ? " first" : "");
+      strip.innerHTML = `<span class="cal-month-badge" id="cal-m-${month}">${month+1}월</span>`;
+      root.appendChild(strip);
+
+      const scroll = document.createElement("div");
+      scroll.className = "cal-scroll";
+      const grid = document.createElement("div");
+      grid.className = "cal-grid";
+      grid.setAttribute("role", "grid");
+      grid.setAttribute("aria-labelledby", `cal-m-${month}`);
+
+      DOW.forEach((d,i) => {
+        const el = document.createElement("div");
+        el.className = "cal-dow" + (i===0 ? " sun" : i===6 ? " sat" : "");
+        el.setAttribute("aria-hidden", "true");
+        el.textContent = d;
+        grid.appendChild(el);
+      });
+      const startDow = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month+1, 0).getDate();
+      for (let i=0; i<startDow; i++){
+        const el = document.createElement("div");
+        el.className = "cal-cell empty";
+        el.setAttribute("aria-hidden", "true");
+        grid.appendChild(el);
+      }
+      for (let d=1; d<=daysInMonth; d++){
+        const iso = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+        const dowIdx = (startDow + d - 1) % 7;
+        const n = daysUntil(iso);
+        const evs = byDate[iso] || [];
+        const el = document.createElement("div");
+        el.className = "cal-cell" + (n === 0 ? " today" : n < 0 ? " past" : "");
+        el.setAttribute("role", "gridcell");
+        el.setAttribute("aria-label", `${month+1}월 ${d}일 ${DOW[dowIdx]}요일${n === 0 ? ", 오늘" : ""}${evs.length ? ", " + evs.map(e => e.label).join(", ") : ""}`);
+        if (n === 0) el.setAttribute("aria-current", "date");
+
+        const num = document.createElement("div");
+        num.className = "cal-daynum" + (dowIdx===0 ? " sun" : dowIdx===6 ? " sat" : "");
+        num.setAttribute("aria-hidden", "true");
+        num.textContent = d;
+        if (n === 0){
+          const tag = document.createElement("span");
+          tag.className = "cal-today-tag";
+          tag.textContent = "오늘";
+          num.appendChild(tag);
+        }
+        el.appendChild(num);
+        evs.forEach(ev => {
+          const isExamChip = ev.type === "exam" && pdfCount(ev.school);
+          const chip = document.createElement(isExamChip ? "button" : "div");
+          chip.className = "cal-chip " + ev.type;
+          if (isExamChip){
+            chip.type = "button";
+            chip.dataset.pdf = ev.school;
+            chip.setAttribute("aria-label", `${ev.label} 기출문제 PDF 열기`);
+          } else {
+            chip.setAttribute("aria-hidden", "true");
+          }
+          chip.textContent = ev.label + (ev.time ? ` ${ev.time}` : "") + (ev.tentative ? " (예정)" : "");
+          if (ev.type === "exam" && ev.school === "삼육대학교"){
+            chip.textContent = ev.label;
+            ["*입실시간 오전 8:50~09:20", "*고사시간 10:00~11:20"].forEach(text => {
+              chip.appendChild(document.createElement("br"));
+              chip.appendChild(document.createTextNode(text));
+            });
+            chip.setAttribute("aria-label", `${ev.label}, 입실시간 오전 8:50~09:20, 고사시간 10:00~11:20, 기출문제 PDF 열기`);
+          }
+          el.appendChild(chip);
+        });
+        grid.appendChild(el);
+      }
+      scroll.appendChild(grid);
+      root.appendChild(scroll);
+    });
+  }
+
+  // 기출문제 팝업
+  const dlg = document.getElementById("pdfDlg");
+  let dlgSchool = null, dlgYear = null;
+
+  function renderPdfYear(){
+    const files = PAST[dlgSchool] || [];
+    const years = [...new Set(files.map(f => f[0]))].sort((a,b) => b - a);
+    document.getElementById("yearBar").innerHTML = years.map(y => {
+      const n = files.filter(f => f[0] === y).length;
+      return `<button type="button" class="year-btn" data-year="${y}" aria-pressed="${y === dlgYear}">${y}<small>학년도 · ${n}</small></button>`;
+    }).join("");
+    const list = files.filter(f => f[0] === dlgYear).sort((a,b) => KIND_ORDER[a[1]] - KIND_ORDER[b[1]]);
+    document.getElementById("fileList").innerHTML = list.map(([y, kind, label, id]) => `
+      <li class="file">
+        <div class="file-info">
+          <span class="kind ${kind}">${KIND_TEXT[kind]}</span>
+          <span class="file-name">${y}학년도 ${label}</span>
+          ${SRC[id] ? `<span class="src"><span class="src-type ${SRC[id][1] === "공식" ? "official" : "repost"}">${SRC[id][1] === "공식" ? "입학처 공식" : "블로그 재게시"}</span><a href="${SRC[id][0]}" target="_blank" rel="noopener">출처 보기</a></span>` : ""}
+        </div>
+        <div class="file-acts">
+          ${id.startsWith("http") ? "" : `<a class="file-act" href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">미리보기</a>`}
+          <a class="file-act dl" href="${id.startsWith("http") ? id : `https://drive.google.com/uc?export=download&id=${id}`}" target="_blank" rel="noopener">${dlIcon}다운로드</a>
+        </div>
+      </li>`).join("");
+  }
+
+  function openPdf(school){
+    const files = PAST[school] || [];
+    dlgSchool = school;
+    dlgYear = Math.max(...files.map(f => f[0]));
+    const info = schoolData[school];
+    document.getElementById("dlgTitle").textContent = `${school} 기출문제`;
+    document.getElementById("dlgSub").textContent = `${info.dept} · 논술고사 ${fmt(info.exam.date)} · 자료 ${files.length}개`;
+    document.getElementById("dlgFolder").href = info.drive;
+    const noteEl = document.getElementById("dlgNote");
+    noteEl.innerHTML = STUDY_NOTE[school] || "";
+    noteEl.hidden = !STUDY_NOTE[school];
+    renderPdfYear();
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+
+  document.addEventListener("click", ev => {
+    const opener = ev.target.closest("[data-pdf]");
+    if (opener){ openPdf(opener.dataset.pdf); return; }
+    const yb = ev.target.closest(".year-btn");
+    if (yb){ dlgYear = Number(yb.dataset.year); renderPdfYear(); document.querySelector(`.year-btn[data-year="${dlgYear}"]`).focus(); }
+  });
+  document.getElementById("dlgClose").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
+
+  /* ===================== 정시 ===================== */
+  // 공통 일정 (대교협 2027학년도 기본사항·시행계획, 교육을 비추다 기사 기준)
+  const JEONGSI_EVENTS = [
+    { date:"2026-11-19", kind:"suneung", label:"대학수학능력시험" },
+    { date:"2026-12-11", kind:"score",   label:"수능 성적표 통지" },
+    { date:"2026-12-11", end:"2026-12-13", kind:"apply", label:"정시 대학입학정보박람회 · 코엑스 A홀", sub:'코엑스 1층 A홀 · 12/11(금)·12/12(토) 10:00~18:00(입장 마감 17:30), 12/13(일) 10:00~15:00(입장 마감 14:30) · 입장료 2,000원 · 사전예매 또는 현장 구매 · <a href="https://univexpo.kr/sub-04-01" target="_blank" rel="noopener">공식 일정·입장권 예매</a> · <a href="https://univexpo.kr/sub-01-02" target="_blank" rel="noopener">참가 대학 목록</a>' },
+    { date:"2026-12-18", kind:"susi",    label:"수시 합격자 발표 마감", sub:"수시 합격자(최초·충원 합격)는 정시·추가모집에 지원할 수 없습니다." },
+    { date:"2026-12-21", end:"2026-12-23", kind:"susi", label:"수시 합격자 등록" },
+    { date:"2027-01-04", end:"2027-01-07", kind:"apply", label:"정시 원서접수", sub:"대학마다 이 기간 중 3일 이상 접수 · 마감일과 시각은 대학마다 다릅니다." },
+    { date:"2027-01-11", end:"2027-01-17", kind:"gun", label:"가군 전형기간" },
+    { date:"2027-01-18", end:"2027-01-24", kind:"gun", label:"나군 전형기간" },
+    { date:"2027-01-25", end:"2027-01-31", kind:"gun", label:"다군 전형기간", sub:"가·나·다군별로 1회씩, 최대 3곳 지원할 수 있습니다." },
+    { date:"2027-02-05", kind:"result", label:"정시 합격자 발표 마감" },
+    { date:"2027-02-10", end:"2027-02-12", kind:"result", label:"정시 합격자 등록" },
+    { date:"2027-02-19", end:"2027-02-26", kind:"extra", label:"추가모집", sub:"정시 합격 후 등록한 사람은 지원할 수 없습니다." }
+  ];
+  const fmtRange = ev => ev.end ? `${fmt(ev.date)} ~ ${fmt(ev.end)}` : fmt(ev.date);
+  function eventState(ev){
+    const s = daysUntil(ev.date), e = daysUntil(ev.end || ev.date);
+    return e < 0 ? "done" : s <= 0 ? "now" : "upcoming";
+  }
+  function eventPill(ev){
+    const st = eventState(ev), n = daysUntil(ev.date);
+    if (st === "done") return `<span class="dday done">지남</span>`;
+    if (st === "now") return `<span class="dday today">${ev.end ? "진행 중" : "오늘"}</span>`;
+    return `<span class="dday${n <= 7 ? " soon" : ""}">D-${n}</span>`;
+  }
+
+  function renderJTimeline(){
+    document.getElementById("jTimeline").innerHTML = JEONGSI_EVENTS.map(ev => `
+      <li class="${eventState(ev)}">
+        <span class="jdate"><i class="jkind k-${ev.kind}" aria-hidden="true"></i>${fmtRange(ev)}</span>
+        <span class="jwhat"><b>${ev.label}</b>${ev.sub ? `<span>${ev.sub}</span>` : ""}</span>
+        ${eventPill(ev)}
+      </li>`).join("");
+  }
+
+  function renderTodoJ(){
+    const next = JEONGSI_EVENTS.filter(ev => eventState(ev) !== "done").slice(0, 3);
+    document.getElementById("todoJ").innerHTML = next.map((ev, i) => {
+      const st = eventState(ev), n = daysUntil(ev.date);
+      const when = st === "now" ? (ev.end ? "진행 중" : "오늘") : `D-${n}`;
+      return `<div class="todo-item${ev.kind === "suneung" ? " suneung" : ""}"><span class="todo-label">${i === 0 ? "가장 가까운 일정" : "다음 일정"} · ${when}</span>
+        <span class="todo-main">${fmtRange(ev)}</span><span class="todo-sub">${ev.label}</span></div>`;
+    }).join("");
+  }
+
+  // 최저 계산기: 수시 탭의 최저학력기준과 같은 규칙
+  const MIN_RULE = {
+    "가천대학교":     { type:"one", grade:3, text:"국·수·영·탐(1) 중 1개 영역 3등급 이내" },
+    "삼육대학교":     { type:"one", grade:3, text:"국·영·수·탐(1) 중 1개 영역 3등급 이내" },
+    "동덕여자대학교": { type:"two", sum:6,  text:"국·영·수·탐(상위1) 중 2개 영역 합 6 이내" },
+    "국민대학교":     { type:"two", sum:6,  text:"국·수·영·탐(상위1) 중 2개 영역 합 6 이내" },
+    "덕성여자대학교": { type:"two", sum:7,  text:"국·수·영·탐(상위1) 중 2개 영역 합 7 이내 (영어는 제2외국어/한문으로 대체 가능)" },
+    "가톨릭대학교":   { type:"none", text:"사회학과는 최저 없음" }
+  };
+  const AREAS = [ ["kor","국어"], ["math","수학"], ["eng","영어"], ["t1","탐구 1"], ["t2","탐구 2"] ];
+  const STORE_KEY = "gaeun-jeongsi-v1";
+  function loadStore(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch(e){ return {}; } }
+  function saveStore(obj){ try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch(e){} }
+  const store = loadStore();
+  store.grades = store.grades || {};
+  store.checks = store.checks || {};
+
+  function renderCalcInputs(){
+    const opts = g => `<option value="">-</option>` + [1,2,3,4,5,6,7,8,9].map(n => `<option value="${n}"${g == n ? " selected" : ""}>${n}등급</option>`).join("");
+    document.getElementById("calcInputs").innerHTML = AREAS.map(([k, name]) => `
+      <div class="calc-field"><label for="g-${k}">${name}</label>
+        <select id="g-${k}" data-area="${k}">${opts(store.grades[k])}</select></div>`).join("");
+  }
+
+  function evaluate(rule, g){
+    if (rule.type === "none") return { st:"free", detail:"" };
+    const tam = [g.t1, g.t2].filter(Boolean);
+    const pool = [ ["국어", g.kor], ["수학", g.math], ["영어", g.eng], ["탐구", tam.length ? Math.min(...tam) : null] ].filter(a => a[1]);
+    const complete = g.kor && g.math && g.eng && tam.length;
+    if (rule.type === "one"){
+      const best = pool.slice().sort((a,b) => a[1] - b[1])[0];
+      if (best && best[1] <= rule.grade) return { st:"ok", detail:`${best[0]} ${best[1]}등급 (기준 ${rule.grade}등급 이내)` };
+      if (!complete) return { st:"wait", detail: best ? `지금까지 최고 ${best[0]} ${best[1]}등급` : "등급을 입력하세요" };
+      return { st:"no", detail:`최고 ${best[0]} ${best[1]}등급 (기준 ${rule.grade}등급 이내)` };
+    }
+    const two = pool.slice().sort((a,b) => a[1] - b[1]).slice(0, 2);
+    if (two.length === 2){
+      const sum = two[0][1] + two[1][1];
+      const line = `${two[0][0]} ${two[0][1]} + ${two[1][0]} ${two[1][1]} = ${sum} (기준 ${rule.sum} 이내)`;
+      if (sum <= rule.sum) return { st:"ok", detail:line };
+      if (complete) return { st:"no", detail:line };
+      return { st:"wait", detail:`현재 ${line}` };
+    }
+    return { st:"wait", detail:"2개 영역 이상 입력하세요" };
+  }
+  const CALC_TEXT = { ok:"충족", no:"미충족", wait:"입력 필요", free:"최저 없음" };
+
+  function renderCalc(){
+    const g = {};
+    AREAS.forEach(([k]) => { g[k] = store.grades[k] ? Number(store.grades[k]) : null; });
+    document.getElementById("calcOut").innerHTML = schoolsByExam.map(school => {
+      const rule = MIN_RULE[school], r = evaluate(rule, g), info = schoolData[school];
+      const examNote = isExamPast(school) ? "논술 응시 완료" : `논술 ${fmt(info.exam.date)}`;
+      return `<li class="${r.st}">
+        <div class="c-head"><b>${info.short} <small style="font-weight:400;color:var(--muted)">${examNote}</small></b><span class="chip ${r.st}">${CALC_TEXT[r.st]}</span></div>
+        <span class="c-rule">${rule.text}</span>
+        ${r.detail ? `<span class="c-detail">${r.detail}</span>` : ""}
+      </li>`;
+    }).join("");
+  }
+
+  const CHECKS = [
+    ["c1", "수능 다음 날 가채점으로 수시 최저 충족 여부 확인", "위 계산기에 등급을 넣어 보세요."],
+    ["c2", "최저 충족 여부를 보고 남은 논술 응시 결정", "삼육대 11.23 · 동덕여대 11.28 · 덕성여대 11.29 · 가천대 11.30 · 국민대 12.5"],
+    ["c3", "12.11 수능 성적표 받기", "표준점수·백분위·등급을 확인하고 계산기에 실제 등급으로 다시 입력"],
+    ["c4", "12.18까지 수시 합격자 발표 확인", "수시에 합격(충원 포함)하면 정시·추가모집에 지원할 수 없습니다."],
+    ["c5", "정시 지원 후보 대학·학과 정하기", "성적표를 받은 뒤 후보를 정하고, 위 ‘확인할 항목’을 각 대학 모집요강에서 확인"],
+    ["c6", "가·나·다군 지원 대학 결정", "군별로 1회씩, 최대 3곳"],
+    ["c7", "1.4~1.7 원서접수", "대학마다 마감일과 시각이 다르니 마감 전날까지 접수"]
+  ];
+  function renderChecklist(){
+    document.getElementById("checklist").innerHTML = CHECKS.map(([id, t, s]) => `
+      <li><label><input type="checkbox" data-check="${id}"${store.checks[id] ? " checked" : ""}><span>${t}<small>${s}</small></span></label></li>`).join("");
+  }
+
+  document.addEventListener("change", ev => {
+    const sel = ev.target.closest("[data-area]");
+    if (sel){ store.grades[sel.dataset.area] = sel.value; saveStore(store); renderCalc(); return; }
+    const cb = ev.target.closest("[data-check]");
+    if (cb){ store.checks[cb.dataset.check] = cb.checked; saveStore(store); }
+  });
+
+  // 탭 전환
+  const TABS = [ ["susi", document.getElementById("tab-susi"), document.getElementById("panel-susi")],
+                 ["jeongsi", document.getElementById("tab-jeongsi"), document.getElementById("panel-jeongsi")] ];
+  function selectTab(key, focus){
+    TABS.forEach(([k, tab, panel]) => {
+      const on = k === key;
+      tab.setAttribute("aria-selected", on);
+      tab.tabIndex = on ? 0 : -1;
+      panel.hidden = !on;
+      if (on && focus) tab.focus();
+    });
+    store.tab = key; saveStore(store);
+  }
+  TABS.forEach(([k, tab], i) => {
+    tab.addEventListener("click", () => selectTab(k));
+    tab.addEventListener("keydown", ev => {
+      if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+      ev.preventDefault();
+      selectTab(TABS[(i + 1) % TABS.length][0], true);
+    });
+  });
+
+  renderTodoJ();
+  renderJTimeline();
+  renderCalcInputs();
+  renderCalc();
+  renderChecklist();
+  selectTab(location.hash === "#jeongsi" ? "jeongsi" : (store.tab || "susi"));
+
+  renderTodo();
+  renderCalendar();
+  renderRatios();
+  renderSchedule();
+  renderDetails();
+
+  document.getElementById("footnote").textContent =
+    "경쟁률은 원서접수 마감 후 각 대학이 발표한 최종 경쟁률입니다. 일부 대학은 수시 6회 지원 위반자 확인 결과에 따라 지원인원이 소폭 변경될 수 있다고 안내하고 있습니다. 일정 정보는 각 대학 모집요강 공지 페이지 기준이며, 세부 고사시간·고사장은 대부분 시험 며칠 전 대학 홈페이지에서 별도 공지됩니다. 길찾기는 각 대학 대표 캠퍼스 주소 기준이며, 고사장이 정해지면 해당 건물을 다시 확인하세요.";
+</script>
+</body>
+</html>

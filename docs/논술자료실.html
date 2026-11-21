@@ -1,0 +1,693 @@
+<title>논술 기출·가이드북 자료실</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 자료실 게시판 — 학교 탭 + 학교 요약표 + 학년도별 파일 목록(행마다 다운로드 버튼) */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --line:#dde3ec; --ink:#16202e; --muted:#5b6778;
+  --accent:#2f5bd3; --accent-soft:#e7eefc; --accent-ink:#1f45ad;
+  --exam:#b4372d; --exam-soft:#fbe9e7; --guide:#1d7a55; --guide-soft:#e3f4ec;
+  --mock:#8a5a00; --mock-soft:#fbf0d9; --info:#5b6778; --info-soft:#edf0f4;
+  --font-display:"Gothic A1","Noto Sans KR",system-ui,sans-serif;
+  --font-body:"Noto Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#10151d; --surface:#18202b; --line:#2b3644; --ink:#e7ecf3; --muted:#9aa6b6;
+  --accent:#7ea2ff; --accent-soft:#1f2c47; --accent-ink:#a9c0ff;
+  --exam:#ff8f84; --exam-soft:#3a1f1e; --guide:#6fd3a6; --guide-soft:#173328;
+  --mock:#f0c060; --mock-soft:#3a2f17; --info:#aab4c2; --info-soft:#232c38; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#10151d; --surface:#18202b; --line:#2b3644; --ink:#e7ecf3; --muted:#9aa6b6;
+  --accent:#7ea2ff; --accent-soft:#1f2c47; --accent-ink:#a9c0ff;
+  --exam:#ff8f84; --exam-soft:#3a1f1e; --guide:#6fd3a6; --guide-soft:#173328;
+  --mock:#f0c060; --mock-soft:#3a2f17; --info:#aab4c2; --info-soft:#232c38; color-scheme:dark; }
+
+*{ box-sizing:border-box; }
+body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:28px 48px; }
+.wrap{ max-width:1040px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
+a{ color:var(--accent-ink); }
+a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+
+header h1{ font-family:var(--font-display); font-weight:800; font-size:clamp(22px, 4vw, 30px); margin:0 0 6px; text-wrap:balance; letter-spacing:-0.01em; }
+header p{ margin:0; color:var(--muted); max-width:62ch; }
+.legend{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; font-size:13px; color:var(--muted); align-items:center; }
+
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:14px; }
+.summary{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; min-width:680px; font-size:14px; }
+th, td{ padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+thead th{ font-size:12.5px; color:var(--muted); font-weight:700; letter-spacing:0.02em; background:var(--bg); }
+thead th:first-child{ border-top-left-radius:14px; } thead th:last-child{ border-top-right-radius:14px; }
+tbody tr:last-child th, tbody tr:last-child td{ border-bottom:0; }
+tbody th{ font-weight:700; }
+.dept{ display:block; font-weight:400; font-size:12.5px; color:var(--muted); }
+.ext{ display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:var(--accent-soft); color:var(--accent-ink); text-decoration:none; font-size:13px; font-weight:500; white-space:nowrap; }
+.ext:hover{ text-decoration:underline; }
+.none{ color:var(--muted); font-size:12.5px; }
+.go{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:6px 10px; font:inherit; font-size:13px; cursor:pointer; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.go b{ color:var(--accent-ink); }
+.go:hover{ border-color:var(--accent); }
+
+.tabs{ display:flex; flex-wrap:wrap; gap:6px; }
+.tab{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:7px 14px; font:inherit; font-size:14px; cursor:pointer; }
+.tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:700; }
+.tab .cnt{ opacity:.7; font-size:12.5px; }
+
+.board{ padding:6px 0; }
+.board-head{ padding:16px 18px 6px; display:grid; gap:4px; }
+.board-head h2{ font-family:var(--font-display); font-size:19px; margin:0; }
+.board-head .meta{ color:var(--muted); font-size:13px; display:flex; flex-wrap:wrap; gap:4px 12px; }
+.note{ margin:8px 18px 4px; padding:10px 12px; border-radius:10px; background:var(--accent-soft); font-size:13.5px; }
+.year{ padding:14px 18px 2px; font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--muted); letter-spacing:0.02em; }
+ul.files{ list-style:none; margin:0; padding:0 8px 6px; }
+.file{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 14px; align-items:center; padding:10px; border-top:1px solid var(--line); }
+.file:first-child{ border-top:0; }
+.file-info{ min-width:0; display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; }
+.name{ font-weight:500; overflow-wrap:anywhere; }
+.kind{ font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:6px; letter-spacing:0.02em; white-space:nowrap; }
+.kind.exam{ background:var(--exam-soft); color:var(--exam); } .kind.guide{ background:var(--guide-soft); color:var(--guide); }
+.kind.mock{ background:var(--mock-soft); color:var(--mock); } .kind.info{ background:var(--info-soft); color:var(--info); }
+.src{ font-size:12px; color:var(--muted); width:100%; }
+.src a{ color:var(--muted); }
+.acts{ display:flex; gap:6px; }
+.btn{ display:inline-flex; align-items:center; gap:5px; padding:7px 12px; border-radius:8px; font-size:13px; font-weight:500; text-decoration:none; white-space:nowrap; border:1px solid var(--line); color:var(--ink); background:var(--surface); }
+.btn.dl{ background:var(--accent); border-color:var(--accent); color:var(--surface); }
+.btn svg{ width:14px; height:14px; }
+.btn:hover{ filter:brightness(1.05); text-decoration:underline; }
+.folder{ padding:4px 18px 14px; font-size:13px; }
+footer{ color:var(--muted); font-size:12.5px; display:grid; gap:4px; }
+@media (max-width:560px){ .file{ grid-template-columns:1fr; } .acts{ justify-content:flex-start; } }
+@media (prefers-reduced-motion:no-preference){ .tab, .go, .btn{ transition:background .15s, border-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>논술 기출·가이드북 자료실</h1>
+    <p style="margin:12px 0"><a href="지원 학교별 출제 경향.html">지원 학교별 출제 경향 · 5개 학교 통합 보기 →</a></p>
+    <p>2027학년도 수시 논술 5개 대학의 기출문제, 논술 가이드북, 모의논술 자료입니다. 학교를 고른 뒤 각 파일의 <b>다운로드</b>를 누르면 새 탭에서 파일을 받습니다.</p>
+    <div class="legend"><span class="kind exam">기출문제</span><span class="kind guide">가이드북</span><span class="kind mock">모의논술</span><span class="kind info">안내</span><span>· 출처: 입학처 공식 게시물 또는 블로그 재게시(표시)</span></div>
+  </header>
+
+  <section class="card summary" aria-labelledby="h-sum">
+    <h2 id="h-sum" hidden>학교별 요약</h2>
+    <table>
+      <thead><tr><th scope="col">학교 · 학과</th><th scope="col">유의사항</th><th scope="col">입학원서(수험표)</th><th scope="col">논술가이드북(기출문제)</th><th scope="col">최저학력기준</th></tr></thead>
+      <tbody id="sumBody"></tbody>
+    </table>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="학교 선택" id="tabs"></div>
+  <section class="card board" id="board" aria-live="polite"></section>
+
+  <footer>
+    <span>최저학력기준과 자료 목록은 각 대학 입학처 모집요강·게시물을 기준으로 정리했습니다. 지원 전 대학 공지를 다시 확인하세요.</span>
+    <span>미리보기·다운로드는 구글 드라이브 또는 대학 입학처 서버로 연결됩니다.</span>
+  </footer>
+</div>
+
+<script>
+const ORDER = ["삼육대학교","동덕여자대학교","덕성여자대학교","가천대학교","국민대학교"];
+const SCHOOLS = {
+ "삼육대학교": {
+  "short": "삼육대",
+  "dept": "상담심리학과",
+  "type": "논술우수자전형",
+  "notice": null,
+  "portal": "https://ipsi.uwayapply.com/outlink/?EncParam=OWZ3sWd9NYztE2BG00dp6MxFdkBgW2TPqnXHg0d2qeQ%3D",
+  "drive": "https://drive.google.com/drive/folders/1wrxjxqNxiSoLqS0laEDc7zxmaHM5RL0M",
+  "minReq": "1개 영역 3등급",
+  "minReqFull": "국어, 영어, 수학, 탐구(1과목) 중 1개 영역 3등급 이내"
+ },
+ "동덕여자대학교": {
+  "short": "동덕여대",
+  "dept": "문예창작전공",
+  "type": "논술우수자전형",
+  "notice": null,
+  "portal": "https://ipsi3.uwayapply.com/2027/susi2/dongduk/?CHA=1&UM",
+  "drive": "https://drive.google.com/drive/folders/1YIveWvT3C-vS9UolrDiG0gRem5bp-J0L",
+  "minReq": "2개 영역 합6",
+  "minReqFull": "국어, 영어, 수학, 탐구(상위 1과목) 중 2개 영역 등급 합 6 이내"
+ },
+ "덕성여자대학교": {
+  "short": "덕성여대",
+  "dept": "글로벌융합대학(인문사회)",
+  "type": "논술전형[논술위주]",
+  "notice": "https://apply.jinhakapply.com/Notice/1053063/A",
+  "portal": "https://apply.jinhakapply.com/Payment/UnivPayResult/1053063",
+  "drive": "https://drive.google.com/drive/folders/1TkDO6LSTubLR1D04vTrZ8BsZWBtJB7DY",
+  "minReq": "2개 영역 합7",
+  "minReqFull": "국어, 수학, 영어, 탐구(사회/과학 중 상위 1과목) 중 2개 영역 등급 합 7 이내 (영어는 제2외국어/한문으로 대체 가능)"
+ },
+ "가천대학교": {
+  "short": "가천대",
+  "dept": "유아교육학과",
+  "type": "논술 전형 (인문계열)",
+  "notice": "https://apply.jinhakapply.com/Notice/1019071/A",
+  "portal": "https://apply.jinhakapply.com/Payment/UnivPayResult/1019071",
+  "drive": "https://drive.google.com/drive/folders/1wlrsttpDNsgEd7tggil-ZccqOCo9Mk1D",
+  "minReq": "1개 영역 3등급",
+  "minReqFull": "국어, 수학, 영어, 사회/과학탐구(1과목) 중 1개 영역 3등급 이내"
+ },
+ "국민대학교": {
+  "short": "국민대",
+  "dept": "국어국문학전공",
+  "type": "논술(논술전형)",
+  "notice": null,
+  "portal": "https://ipsi2.uwayapply.com/2027/susi2/kookmin/?CHA=1",
+  "drive": "https://drive.google.com/drive/folders/139GeHlNoeOGHaAn6pFAbmghE_qQ_Gs-Y",
+  "minReq": "2개 영역 합6",
+  "minReqFull": "국어, 수학, 영어, 탐구(사회/과학 중 상위 1과목) 중 2개 영역 등급 합 6 이내"
+ }
+};
+const PAST = {
+ "삼육대학교": [
+  [
+   2026,
+   "exam",
+   "기출문제 (인문) · 영향평가 부록",
+   "1nIy-9_ChVyO3_L0Y8GfD3SqxfSprJTxm"
+  ],
+  [
+   2026,
+   "exam",
+   "기출 및 해설 (2027 논술가이드북)",
+   "13W0A0TodLAvza9apIeh_z-6_0eobK9QE"
+  ],
+  [
+   2025,
+   "exam",
+   "인문 기출 정답·채점기준",
+   "1SKzbLf7drByhZ585532vZ7RugnLF-m6b"
+  ],
+  [
+   2025,
+   "guide",
+   "논술가이드북 (2024 기출 수록)",
+   "1vSgNhBC27rjbcp4j8O3Es1ImBRfPbKOB"
+  ],
+  [
+   2024,
+   "exam",
+   "기출 및 해설",
+   "1FPLDO6fMuh-S7JXYM_lOeYdK16OQc5aA"
+  ],
+  [
+   2024,
+   "mock",
+   "모의논술 문제와 정답",
+   "1kcp-vZRpHW7Je0TaYfWmsoRxfwxk2EKT"
+  ]
+ ],
+ "동덕여자대학교": [
+  [
+   2027,
+   "guide",
+   "약술형 예시문제와 해설 가이드북",
+   "1trEWCjc8i_Ot06G-HMxKQjn45FDZI3u0"
+  ],
+  [
+   2027,
+   "info",
+   "수시 면접·논술·실기고사 일정 안내 (7/30)",
+   "1K324BCEGkCJl0lMn7NNq1NgFHLOy5nVL"
+  ],
+  [
+   2026,
+   "exam",
+   "기출 인문사회 I",
+   "1Ea-NG9vkpGyXHAqKchE8ZUoC9-8y7QAC"
+  ],
+  [
+   2026,
+   "exam",
+   "기출 인문사회 II",
+   "1g0mxfLWSjeq6HnHfQBVlfjxk2nBILuAe"
+  ],
+  [
+   2026,
+   "exam",
+   "기출 해설·문항카드",
+   "1srC2k94mfDZzpDJxmggitBqRhznmVWk3"
+  ],
+  [
+   2026,
+   "mock",
+   "모의논술 문제와 해설 가이드북",
+   "125xKCsZIJsqnEq7EFCck0WOfiwW8Jmri"
+  ],
+  [
+   2025,
+   "exam",
+   "기출문제와 문항카드",
+   "1LtLCxJ8FRjSinGhjhcjt4lHjLRtPZnDS"
+  ],
+  [
+   2025,
+   "mock",
+   "모의논술 문제와 해설 가이드북",
+   "1C9TZqnOdkPl0v0Y9c7wjyfi-x4r-RBWv"
+  ],
+  [
+   2024,
+   "exam",
+   "기출문제와 문항카드",
+   "1lZxZwSi_lg3Nc5uQPhyI8HsdkH3dsCSQ"
+  ]
+ ],
+ "덕성여자대학교": [
+  [
+   2027,
+   "guide",
+   "논술가이드북",
+   "1waExYBWGTP37MxFaQY8irb6h-7EYIVkg"
+  ],
+  [
+   2027,
+   "mock",
+   "온라인 모의논술고사 해설집",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=992&menu=boardfile"
+  ],
+  [
+   2026,
+   "exam",
+   "논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=964&menu=boardfile"
+  ],
+  [
+   2026,
+   "mock",
+   "온라인 모의논술고사 해설집",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=865&menu=boardfile"
+  ],
+  [
+   2025,
+   "exam",
+   "논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=862&menu=boardfile"
+  ],
+  [
+   2025,
+   "mock",
+   "온라인 모의논술고사 해설집",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=752&menu=boardfile"
+  ],
+  [
+   2024,
+   "exam",
+   "논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=728&menu=boardfile"
+  ],
+  [
+   2024,
+   "mock",
+   "모의논술고사 해설집",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=612&menu=boardfile"
+  ],
+  [
+   2023,
+   "exam",
+   "논술고사 기출문제·문제해설 ZIP (인문사회계열 PDF 포함)",
+   "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=579&menu=boardfile"
+  ],
+  [
+   2027,
+   "info",
+   "수시 모집요강",
+   "1NhHmQQWB_8wtLFwBXMgHDPsyOJMkIWVI"
+  ],
+  [
+   2026,
+   "guide",
+   "논술가이드북",
+   "1ZY3mbL2cB4sMEl484ZmSH5N_UBKVuSJF"
+  ],
+  [
+   2025,
+   "guide",
+   "논술가이드북 (단면)",
+   "1H8O8S6wN4ve2dA0btuzpXGUqz6KaAodo"
+  ],
+  [
+   2024,
+   "guide",
+   "논술가이드북",
+   "1ANCPem_HaG5SNoUmN6uiBC6BRrXTyRbN"
+  ],
+  [
+   2023,
+   "guide",
+   "논술가이드북",
+   "1n6uTz9WcGf6YXDcvv4NZpkxEUK7NCgAI"
+  ]
+ ],
+ "가천대학교": [
+  [
+   2027,
+   "guide",
+   "2027 논술 가이드 (2026 기출 수록)",
+   "1OqPe2zs9prj9-vqJch40WekrPt3Ot9_q"
+  ],
+  [
+   2027,
+   "mock",
+   "모의논술 A형 문제 (국어 4·수학 4, 인문·자연 공통)",
+   "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227B86T77.PDF"
+  ],
+  [
+   2027,
+   "mock",
+   "모의논술 B형 문제 (국어 4·수학 4, 인문·자연 공통)",
+   "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227RHZADM.PDF"
+  ],
+  [
+   2027,
+   "mock",
+   "모의논술 해설 ZIP (A·B형 국어·수학 해설 PDF 4개)",
+   "https://admission.gachon.ac.kr/upload/BBS0004/20260828151911F2AVPB.ZIP"
+  ],
+  [
+   2026,
+   "guide",
+   "논술 가이드북",
+   "1knj0xxcyWBghT8BHbwrgypQjb0-HVzzh"
+  ],
+  [
+   2026,
+   "mock",
+   "모의논술",
+   "17vR1atV5u8Y98pJRpW2FPUnzjMvAFbUL"
+  ],
+  [
+   2025,
+   "exam",
+   "논술 문제·해설",
+   "1ck9Vz3Rit1CqoKLdKbO2WzOf-1Qq-3OU"
+  ],
+  [
+   2025,
+   "guide",
+   "논술 가이드북",
+   "1YZNtHHLNXLt4C4a_SqdOYBItJRxpy0uw"
+  ],
+  [
+   2025,
+   "mock",
+   "모의논술",
+   "1YbFJDZcOTF4AARUwLcOubxmLo1JMJY5N"
+  ],
+  [
+   2024,
+   "exam",
+   "논술 문제·해설",
+   "1kF_9sZYs6hItKlghkDv_J74KSOBwcWbX"
+  ],
+  [
+   2024,
+   "guide",
+   "논술 가이드북",
+   "1apM_sojk8TXM4XQ1q-9WH1dn6m7NK2eB"
+  ],
+  [
+   2024,
+   "mock",
+   "모의논술 문제·해설",
+   "1HA2f48Id3dp3Kvaet5U6hS3rtmOgpEIk"
+  ],
+  [
+   2023,
+   "exam",
+   "논술 문제·해설",
+   "1EC6m27_eq1L6LFeakwlG3rIQKTS1dWi9"
+  ],
+  [
+   2023,
+   "guide",
+   "논술 가이드북",
+   "1nCMFUOfQ6aFceIhVYDuuHY3crfp6njv6"
+  ],
+  [
+   2023,
+   "mock",
+   "모의논술 문제·해설",
+   "1LPoROL9Y2g-l4sUMoCiLxT-35gq4aLXJ"
+  ],
+  [
+   2022,
+   "exam",
+   "논술 문제·해설",
+   "1nuVjojB42kkBgUBMsjN_I_AQZ4Dv94b6"
+  ],
+  [
+   2022,
+   "guide",
+   "논술 가이드북",
+   "1yZY1yPqCYdrzroCWDnTTYnnJqwmGDCSQ"
+  ]
+ ],
+ "국민대학교": [
+  [
+   2027,
+   "guide",
+   "논술가이드북 (2026 논술 결과·출제기준·기출 수록)",
+   "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2172"
+  ],
+  [
+   2027,
+   "info",
+   "논술전형 모집단위별 고사시간 안내",
+   "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2196"
+  ],
+  [
+   2026,
+   "exam",
+   "선행학습 영향평가 보고서 (논술 문항·문항카드, 부록 39쪽~)",
+   "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2168"
+  ],
+  [
+   2026,
+   "guide",
+   "논술가이드북 (입학처 공식 파일)",
+   "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2094"
+  ],
+  [
+   2026,
+   "exam",
+   "오전 · 인문 국어",
+   "1Y1_9UIXRoCRcu2ZGbOoUEhxH2Y9twuFq"
+  ],
+  [
+   2026,
+   "exam",
+   "오전 · 인문 수학 (1문항 출제 범위 이탈로 전원 만점)",
+   "1rNnm8QSTzHEoX9aDIZ1sH2Y0A48P5FFb"
+  ],
+  [
+   2026,
+   "exam",
+   "오후1 · 인문 국어",
+   "17IGgJsLradIOYGOXLpnw0oKcgJINSZhq"
+  ],
+  [
+   2026,
+   "exam",
+   "오후1 · 인문 수학",
+   "1jTw5o26f2WStkfsJG3uON3Xshgtw11_V"
+  ],
+  [
+   2026,
+   "exam",
+   "오후2 · 인문 국어",
+   "1tes5bo3vWgxFgyPQy9imOPveLu-XSL7J"
+  ],
+  [
+   2026,
+   "exam",
+   "오후2 · 인문 수학",
+   "1nEq5MICVphEkDMNmqin9lcA1OFyStEss"
+  ]
+ ]
+};
+const SRC = {
+ "13W0A0TodLAvza9apIeh_z-6_0eobK9QE": [
+  "https://ipsi.syu.ac.kr/2016_syu/pages/index.asp?gd=01&p=96",
+  "공식"
+ ],
+ "1SKzbLf7drByhZ585532vZ7RugnLF-m6b": [
+  "https://mdsisite.tistory.com/1587",
+  "재게시"
+ ],
+ "1vSgNhBC27rjbcp4j8O3Es1ImBRfPbKOB": [
+  "https://kamdongmath.tistory.com/entry/2024-%EC%82%BC%EC%9C%A1%EB%8C%80-%EB%85%BC%EC%88%A0-%EA%B8%B0%EC%B6%9C",
+  "재게시"
+ ],
+ "1FPLDO6fMuh-S7JXYM_lOeYdK16OQc5aA": [
+  "https://kamdongmath.tistory.com/entry/2024-%EC%82%BC%EC%9C%A1%EB%8C%80-%EB%85%BC%EC%88%A0-%EA%B8%B0%EC%B6%9C",
+  "재게시"
+ ],
+ "1kcp-vZRpHW7Je0TaYfWmsoRxfwxk2EKT": [
+  "https://mdsisite1.tistory.com/503",
+  "재게시"
+ ],
+ "1trEWCjc8i_Ot06G-HMxKQjn45FDZI3u0": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=91947&schM=view",
+  "공식"
+ ],
+ "1Ea-NG9vkpGyXHAqKchE8ZUoC9-8y7QAC": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=91641&schM=view",
+  "공식"
+ ],
+ "1g0mxfLWSjeq6HnHfQBVlfjxk2nBILuAe": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=91641&schM=view",
+  "공식"
+ ],
+ "1srC2k94mfDZzpDJxmggitBqRhznmVWk3": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=91641&schM=view",
+  "공식"
+ ],
+ "125xKCsZIJsqnEq7EFCck0WOfiwW8Jmri": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=90261&schM=view",
+  "공식"
+ ],
+ "1LtLCxJ8FRjSinGhjhcjt4lHjLRtPZnDS": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=89852&schM=view",
+  "공식"
+ ],
+ "1C9TZqnOdkPl0v0Y9c7wjyfi-x4r-RBWv": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=37475&schM=view",
+  "공식"
+ ],
+ "1lZxZwSi_lg3Nc5uQPhyI8HsdkH3dsCSQ": [
+  "https://ipsi.dongduk.ac.kr/ipsi/contents/nontime-doc.do?id=37407&schM=view",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=992&menu=boardfile": [
+  "https://enter.duksung.ac.kr/notice/view.php?bn=7107",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=964&menu=boardfile": [
+  "https://enter.duksung.ac.kr/data/view.php?bn=6939",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=865&menu=boardfile": [
+  "https://enter.duksung.ac.kr/notice/view.php?bn=5393",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=862&menu=boardfile": [
+  "https://enter.duksung.ac.kr/data/view.php?bn=5369",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=752&menu=boardfile": [
+  "https://enter.duksung.ac.kr/notice/view.php?bn=3501",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=728&menu=boardfile": [
+  "https://enter.duksung.ac.kr/data/view.php?bn=3432",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=612&menu=boardfile": [
+  "https://enter.duksung.ac.kr/notice/view.php?bn=2085",
+  "공식"
+ ],
+ "https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=579&menu=boardfile": [
+  "https://enter.duksung.ac.kr/data/view.php?bn=1882",
+  "공식"
+ ],
+ "1OqPe2zs9prj9-vqJch40WekrPt3Ot9_q": [
+  "https://admission.gachon.ac.kr/upload/BBS0024/20260616123153AZX4GY.PDF",
+  "공식"
+ ],
+ "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227B86T77.PDF": [
+  "https://admission.gachon.ac.kr/admission/html/counsel/noticeView.asp?BOARD_IDX=32292&s_cate=BBS0401",
+  "공식"
+ ],
+ "https://admission.gachon.ac.kr/upload/BBS0004/20260828094227RHZADM.PDF": [
+  "https://admission.gachon.ac.kr/admission/html/counsel/noticeView.asp?BOARD_IDX=32292&s_cate=BBS0401",
+  "공식"
+ ],
+ "https://admission.gachon.ac.kr/upload/BBS0004/20260828151911F2AVPB.ZIP": [
+  "https://admission.gachon.ac.kr/admission/html/counsel/noticeView.asp?BOARD_IDX=32292&s_cate=BBS0401",
+  "공식"
+ ],
+ "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2172": [
+  "https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1065",
+  "공식"
+ ],
+ "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2196": [
+  "https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1078",
+  "공식"
+ ],
+ "https://admission.kookmin.ac.kr/common/file_download.php?id=notice&no=2168": [
+  "https://admission.kookmin.ac.kr/helper/notice.php?ctype=view&no=1062",
+  "공식"
+ ]
+};
+const NOTES = {
+ "삼육대학교": "2027 가이드북에 2026학년도 인문·자연 기출과 해설이 함께 있으니 <b>인문 부분</b>을 보세요. 가이드북 표지 학년도와 수록된 기출 학년도는 다를 수 있습니다.",
+ "동덕여자대학교": "2027학년도부터 <b>약술형으로 바뀌어</b> 과거 기출과 유형이 다릅니다. 2027학년도 약술형 예시문제부터 보세요."
+};
+const KIND_TEXT = { exam:"기출문제", guide:"가이드북", mock:"모의논술", info:"안내" };
+const KIND_ORDER = { exam:0, guide:1, mock:2, info:3 };
+const dlIcon = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const years = s => { const y = (PAST[s]||[]).map(f=>f[0]); return y.length ? (Math.min(...y) === Math.max(...y) ? `${y[0]}` : `${Math.min(...y)}~${Math.max(...y)}`) : ""; };
+let current = ORDER[0];
+
+function renderSummary(){
+  document.getElementById("sumBody").innerHTML = ORDER.map(s => {
+    const d = SCHOOLS[s];
+    const notice = d.notice ? `<a class="ext" href="${d.notice}" target="_blank" rel="noopener">유의사항 ↗</a>` : `<span class="none">입학원서 참고</span>`;
+    return `<tr>
+      <th scope="row">${s}<span class="dept">${d.dept} · ${d.type}</span></th>
+      <td>${notice}</td>
+      <td><a class="ext" href="${d.portal}" target="_blank" rel="noopener">입학원서 ↗</a></td>
+      <td><button type="button" class="go" data-school="${s}">자료 <b>${PAST[s].length}개</b> · ${years(s)}</button></td>
+      <td>${d.minReq}<span class="dept">${d.minReqFull}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = ORDER.map(s =>
+    `<button type="button" class="tab" role="tab" data-school="${s}" aria-selected="${s === current}">${SCHOOLS[s].short} <span class="cnt">${PAST[s].length}</span></button>`).join("");
+}
+
+function renderBoard(){
+  const s = current, d = SCHOOLS[s], files = PAST[s];
+  const ys = [...new Set(files.map(f => f[0]))].sort((a,b) => b - a);
+  const groups = ys.map(y => {
+    const list = files.filter(f => f[0] === y).sort((a,b) => KIND_ORDER[a[1]] - KIND_ORDER[b[1]]);
+    return `<div class="year">${y}학년도</div><ul class="files">${list.map(([yy, kind, label, id]) => {
+      const http = id.startsWith("http");
+      const src = SRC[id];
+      return `<li class="file">
+        <div class="file-info">
+          <span class="kind ${kind}">${KIND_TEXT[kind]}</span><span class="name">${label}</span>
+          ${src ? `<span class="src">${src[1] === "공식" ? "입학처 공식" : "블로그 재게시"} · <a href="${src[0]}" target="_blank" rel="noopener">출처 보기</a></span>` : ""}
+        </div>
+        <div class="acts">
+          ${http ? "" : `<a class="btn" href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">미리보기</a>`}
+          <a class="btn dl" href="${http ? id : `https://drive.google.com/uc?export=download&id=${id}`}" target="_blank" rel="noopener">${dlIcon}다운로드</a>
+        </div>
+      </li>`; }).join("")}</ul>`;
+  }).join("");
+  document.getElementById("board").innerHTML = `
+    <div class="board-head"><h2>${s}</h2>
+      <div class="meta"><span>${d.dept} · ${d.type}</span><span>자료 ${files.length}개 (${years(s)}학년도)</span></div></div>
+    ${NOTES[s] ? `<p class="note">${NOTES[s]}</p>` : ""}
+    ${groups}
+    <div class="folder"><a href="${d.drive}" target="_blank" rel="noopener">구글 드라이브 폴더 전체 보기 ↗</a></div>`;
+}
+
+function select(s, focusTab){
+  current = s; renderTabs(); renderBoard();
+  if (focusTab) document.querySelector(`.tab[data-school="${s}"]`).focus();
+}
+document.addEventListener("click", ev => {
+  const t = ev.target.closest("[data-school]");
+  if (!t) return;
+  select(t.dataset.school, t.classList.contains("tab"));
+  if (t.classList.contains("go")) document.getElementById("tabs").scrollIntoView({ behavior:"smooth", block:"start" });
+});
+renderSummary(); renderTabs(); renderBoard();
+</script>
