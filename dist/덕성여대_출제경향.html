@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>덕성여대 논술 출제경향</title>
+<style>
+/* Layout: 한 열 문서 — 요약 → 집중 공부 → 채점 주의 → 문항표(학년도 탭) → 비교 → 출처 */
+:root{
+  --bg:#f5f3f8; --surface:#ffffff; --line:#ddd8e6; --ink:#1e1a28; --muted:#625b70;
+  --accent:#6b3fa0; --accent-soft:#efe7f8; --warn:#9a4a12; --warn-soft:#fbeedd;
+  --q1:#2f6b3a; --q1-soft:#e3efe4; --q2:#1f5fa8; --q2-soft:#e2ecf8;
+  --font:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#15121b; --surface:#1e1a26; --line:#322c3d; --ink:#ebe6f2; --muted:#a79fb5;
+  --accent:#c4a2f0; --accent-soft:#2c2240; --warn:#f0a868; --warn-soft:#3a2a18;
+  --q1:#7fc58b; --q1-soft:#1f3322; --q2:#86b6f0; --q2-soft:#1c2c42; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#15121b; --surface:#1e1a26; --line:#322c3d; --ink:#ebe6f2; --muted:#a79fb5;
+  --accent:#c4a2f0; --accent-soft:#2c2240; --warn:#f0a868; --warn-soft:#3a2a18;
+  --q1:#7fc58b; --q1-soft:#1f3322; --q2:#86b6f0; --q2-soft:#1c2c42; color-scheme:dark; }
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:24px 48px; }
+.wrap{ max-width:900px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); gap:18px; }
+h1{ font-size:clamp(22px,5vw,28px); margin:0 0 4px; letter-spacing:-0.01em; text-wrap:balance; }
+h2{ font-size:18px; margin:0 0 10px; }
+h3{ font-size:15px; margin:14px 0 6px; }
+p{ margin:0 0 8px; }
+.sub{ color:var(--muted); font-size:13.5px; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; min-width:0; }
+.key{ background:var(--accent-soft); border-color:transparent; }
+.warn{ background:var(--warn-soft); border-color:transparent; }
+.warn b{ color:var(--warn); }
+ul,ol{ margin:0; padding-left:20px; } li{ margin:3px 0; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 0; }
+.chip{ font-size:12.5px; padding:2px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+.tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.tab{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:6px 14px; font:inherit; font-size:14px; cursor:pointer; }
+.tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:700; }
+.tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.scroll{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:680px; }
+table.small{ min-width:0; }
+th,td{ border-bottom:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:top; }
+thead th{ font-size:12.5px; color:var(--muted); background:var(--bg); }
+td.n{ white-space:nowrap; font-variant-numeric:tabular-nums; }
+.tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:1px 7px; border-radius:6px; white-space:nowrap; }
+.tag.q1{ background:var(--q1-soft); color:var(--q1); } .tag.q2{ background:var(--q2-soft); color:var(--q2); }
+.meta{ font-size:13px; color:var(--muted); margin:0 0 8px; }
+a{ color:var(--accent); word-break:break-all; }
+footer{ font-size:12.5px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>덕성여대 논술 출제경향 (인문·사회계열)</h1>
+  <p class="sub">2024·2025·2026학년도 기출 6문항 + 2027 모의논술 2문항 · 덕성여대 입학처 공식 「문항해설 및 채점기준」·2027 논술가이드북·모의논술 해설집 기준 · 2026.11.20 정리</p>
+</header>
+
+<section class="card key">
+  <h2>한눈에 보기</h2>
+  <ul>
+    <li><b>형식이 삼육대·가천대와 완전히 다릅니다.</b> 짧은 답을 찾아 쓰는 시험이 아니라 <b>500±25자 논술 2문항을 90분</b>에 씁니다(문항당 예상 45분). 수학은 없습니다.</li>
+    <li><b>문제 1: 요약·적용·해결형.</b> 기준이 되는 글의 논지로 다른 제시문(<b>문학 작품이 매년 포함</b>)을 설명하거나, 문제 상황과 해결 방안을 씁니다.</li>
+    <li><b>문제 2: 분류형.</b> 매년 똑같은 틀입니다. 제시문 ㉮의 <b>두 관점</b>을 요약하고, 나머지 4~5개 제시문을 두 관점으로 <b>분류해 근거를 쓰기</b>입니다(법치주의 → 평화 → 정의 → 모의: 정보 비대칭).</li>
+    <li><b>출처는 교과서 중심</b>입니다. 통합사회·생활과 윤리·정치와 법·경제·독서·문학·국어 교과서 제시문이 대부분이고, EBS 수능특강은 2024·2025에만 3개 제시문(모두 2023년판)이 쓰였습니다. 2027 가이드북은 "교과서 및 EBS 교재와 연계된 지문"이라고 안내합니다.</li>
+    <li><b>배점</b>은 2024·2025에 문항별 100점씩이었고, 2026과 2027 모의는 <b>문제 1 = 55점, 문제 2 = 45점</b>입니다.</li>
+    <li>2027 가이드북 KEY POINT(고교 교사 집필)에 "인문사회논술이 통합논술로 전환"된다고 적혀 있지만, 7월 모의논술은 기존 틀(55점 요약·적용·비판 + 45점 분류)과 같았습니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>올해 집중할 곳 (기출·모의 분석 기반 추천)</h2>
+  <p class="meta">아래는 기출 패턴과 대학 해설에서 이끌어 낸 판단이며, 대학이 올해 주제를 발표한 것은 아닙니다.</p>
+  <ol>
+    <li><b>문제 2 (분류형) 대비 — 교과서의 "대립하는 두 관점" 정리.</b> 지금까지 나온 개념쌍: 형식적/실질적 법치주의(정치와 법), 소극적/적극적 평화(윤리와 사상), 롤스/노직(생활과 윤리·통합사회), 도덕적 해이/역선택(경제, 모의). 같은 방식으로 통합사회·생활과 윤리·경제·사회·문화 교과서의 대비 개념을 정리하고, 사례를 둘로 나누는 연습을 하세요.
+      <div class="chips"><span class="chip">통합사회</span><span class="chip">생활과 윤리</span><span class="chip">정치와 법</span><span class="chip">경제</span><span class="chip">사회·문화</span></div></li>
+    <li><b>분류 비율은 해마다 달랐습니다.</b> 1:3(2024) → 2:3(2025) → 2:2(2026, 모의). "반반일 것"이라고 가정하지 말고 제시문마다 판단하세요.</li>
+    <li><b>문제 1 대비 — 기준 글 + 문학 작품 적용.</b> 「조침문」「성에꽃」「일야구도하기」「누가 하늘을 보았다 하는가」「은강 노동 가족의 생계비」「원어」처럼 <b>교과서·수능특강 수록 작품</b>이 나왔습니다. 기준 글의 핵심어로 작품 속 인물·화자의 태도를 설명하는 연습이 필요합니다.</li>
+    <li><b>예시답안 구조를 그대로 따라 쓰기.</b> 가이드북 KEY POINT에 따르면 예시답안은 6~8문장(문장당 60~70자)입니다. 문제 1은 "요약 → 적용/해결 → 결론", 문제 2는 "두 관점 정의 2문장 → 관점별로 묶어 분류 근거"입니다.</li>
+    <li><b>주관적 견해 대신 제시문의 핵심어</b>를 써서 재구성하세요. 채점은 이해력·논증력·표현력 세 영역입니다.</li>
+    <li><b>실전 연습:</b> 2024~2026 기출 3세트와 2027 모의 1세트를 90분 안에 써 보고, 대학 예시답안과 비교하세요(자료실에 있음).</li>
+  </ol>
+</section>
+
+<section class="card warn">
+  <h2>채점에서 점수를 잃는 곳</h2>
+  <ul>
+    <li><b>분량 475~525자만 감점이 없습니다.</b> 525자 초과이거나 300자 초과~475자 미만이면 표현력이 한 등급 낮아지고, <b>300자 이하이면 전 영역 F(0점)</b>입니다(2024~2026 채점기준 공통).</li>
+    <li>가이드북 개요에는 "문항당 500자 이내(총 1,000자 이내)"로 적혀 있지만, 실제 문제지와 채점기준은 매년 <b>500±25자</b>였습니다. 시험지의 표기를 따르세요.</li>
+    <li>문제 2는 제시문을 <b>하나라도 잘못 분류하면</b> 이해력·논증력이 함께 한 등급씩 내려갑니다(평가 요소가 제시문별로 매겨짐).</li>
+    <li>표현력에서는 맞춤법·띄어쓰기, 주어-서술어 호응, 접속사, 비속어를 봅니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>문항별 내용과 출처</h2>
+  <p class="meta">출처는 대학이 「문항해설」의 "자료 출처"에 적은 교과서·교재와 쪽수입니다. 예상 소요 시간은 매 문항 45분(전체 90분)입니다.</p>
+  <div class="tabs" role="tablist" aria-label="학년도 선택" id="tabs"></div>
+  <div class="scroll"><table>
+    <thead><tr><th>문항</th><th>과목(문항카드)</th><th>주제 · 논제</th><th>제시문과 출처</th><th>배점</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p class="meta" id="note" style="margin-top:8px"></p>
+</section>
+
+<section class="card">
+  <h2>한눈에 비교</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>학년도</th><th>문제 1 주제</th><th>문학 제시문</th><th>문제 2 기준 개념(분류)</th><th>EBS 제시문 수</th></tr></thead>
+    <tbody>
+      <tr><td class="n">2024</td><td>맹자의 큰 몸/작은 몸 → 작품 설명</td><td>「일야구도하기」, 「누가 하늘을 보았다 하는가」</td><td>형식적/실질적 법치주의 (1:3)</td><td class="n">1</td></tr>
+      <tr><td class="n">2025</td><td>가치의 상대성 → 대상 가치 판단</td><td>「조침문」, 「성에꽃」</td><td>소극적/적극적 평화 (2:3)</td><td class="n">2</td></tr>
+      <tr><td class="n">2026</td><td>경쟁의 폐해 → 해결 방안</td><td>「은강 노동 가족의 생계비」</td><td>롤스/노직의 정의관 (2:2)</td><td class="n">0</td></tr>
+      <tr><td class="n">2027 모의</td><td>다문화 정책 관점 → 현상 비판</td><td>하종오 「원어」</td><td>도덕적 해이/역선택 (2:2)</td><td class="n">0</td></tr>
+    </tbody></table></div>
+  <h3>경쟁률 (글로벌융합대학 인문사회, 2027 가이드북)</h3>
+  <div class="scroll"><table class="small">
+    <thead><tr><th>학년도</th><th>모집</th><th>최초 경쟁률</th><th>응시자 기준</th><th>수능최저 충족 기준</th></tr></thead>
+    <tbody>
+      <tr><td>2024</td><td class="n">55</td><td class="n">64.44 : 1</td><td class="n">44.44 : 1</td><td class="n">31.31 : 1</td></tr>
+      <tr><td>2025</td><td class="n">55</td><td class="n">68.13 : 1</td><td class="n">46.13 : 1</td><td class="n">31.11 : 1</td></tr>
+      <tr><td>2026</td><td class="n">65</td><td class="n">59.55 : 1</td><td class="n">42.69 : 1</td><td class="n">27.68 : 1</td></tr>
+    </tbody></table></div>
+</section>
+
+<footer>
+  <p>원문(덕성여대 입학처 <a href="https://enter.duksung.ac.kr/" target="_blank" rel="noopener">enter.duksung.ac.kr</a> 자료실):
+  <a href="https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=964&menu=boardfile" target="_blank" rel="noopener">2026 기출·문제해설 ZIP</a> ·
+  <a href="https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=862&menu=boardfile" target="_blank" rel="noopener">2025 기출·문제해설 ZIP</a> ·
+  <a href="https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=728&menu=boardfile" target="_blank" rel="noopener">2024 기출·문제해설 ZIP</a> ·
+  <a href="https://enter.duksung.ac.kr/_common/new_download_file.php?file_no=992&menu=boardfile" target="_blank" rel="noopener">2027 모의논술 해설집</a></p>
+  <p>2027 형식(2문항, 90분)·경쟁률·KEY POINT는 2027 덕성여대 논술가이드북 기준입니다. 시험은 11.29(일) 오후, 입실 12:30~14:00, 고사 14:30~16:00입니다.</p>
+</footer>
+</div>
+
+<script>
+var D = {
+ "2027모의": { note:"2026.7월 온라인 모의논술(입학처 공식 해설집). 대학은 \"모의논술의 출제기조가 본 논술고사에도 유지\"된다고 안내합니다. 기사 제시문은 저작권 때문에 해설집에 일부만 실렸습니다.", rows:[
+  ["1","q1","통합사회, 생활과 윤리, 문학, 국어","다문화 정책 관점(동화주의·국수 대접·샐러드 볼). ㉮㉯의 관점을 ㉰로 설명하고, 한 관점으로 ㉱㉲의 문제 현상 비판","㉮ 메르켈 연설 기사(연합뉴스 2010) ㉯ 다문화 가정 열대작물 기사·정책브리핑 ㉰ 생활과 윤리(미래엔) 171 ㉱ 하종오 「원어」 — 국어(천재) 391 ㉲ 다문화 광고(매일경제 2013)","55점"],
+  ["2","q2","경제, 독서, 사회·문화","정보의 비대칭성: ㉮ 요약 후 도덕적 해이와 역선택 사례 분류(2:2)","㉮ 경제(지학사 75, 천재 85) ㉯ 가짜 뉴스 — 독서(지학사) 224~226 ㉰ 실손보험(한국경제 칼럼 2024) ㉱ 편의점 가맹 — 독서(미래엔) 165·168 ㉲ 연구비 조작 — 사회·문화(미래엔) 42","45점"]]},
+ "2026": { note:"시험 2025.11. 출처는 모두 교과서(EBS 제시문 없음).", rows:[
+  ["1","q1","국어, 문학, 독서, 동아시아사","경쟁·협력·공존. ㉮㉯를 요약해 문제 상황을 제시하고, ㉰㉱로 해결 방안과 이유 서술","㉮ 사회 진화론(가토 히로유키·옌푸·유길준 재구성) — 동아시아사(천재 161, 미래엔 155, 비상 150) ㉯ 조세희 「은강 노동 가족의 생계비」 — 문학(천재교과서) 241~242 ㉰ 이은희 「생태계의 다양성 그리고 공존」 — 독서(미래엔) 176~181 ㉱ 「경쟁, 어떻게 받아들일까」 — 독서(비상) 71~72","55점"],
+  ["2","q2","통합사회, 생활과 윤리, 철학, 국어","롤스(공정으로서의 정의)/노직(소유 권리로서의 정의)으로 ㉯~㉲ 분류(2:2)","㉮ 생활과 윤리(천재교과서) 97·통합사회(천재) 184 ㉯ 성과 연봉제 — 통합사회(지학사) 178 ㉰ 무장애 도시 — 통합사회(비상) 171 ㉱ 핀란드 누진적 벌금형 — 철학(천재교과서) 176 ㉲ 복지와 소득 불균형 — 국어(지학사) 267","45점"]]},
+ "2025": { note:"시험 2024.11. 문제 1은 '인문', 문제 2는 '사회'로 표기됨. EBS 제시문 2개는 2023년 발행 수능특강.", rows:[
+  ["1","q1","국어, 문학, 독서, 심화국어, 고전 읽기, 철학, 논리, 생활과 윤리","예술·가치의 상대성. ㉮의 논지로 ㉠(바늘), ㉡(성에꽃), ㉢(빌렌도르프의 비너스)에 대한 가치 판단 논하기","㉮ 『철학, 예술을 읽다』 — 철학(해냄에듀) 168 ㉯ 유씨 부인 「조침문」 — 독서(지학사) 186~191 ㉰ 최두석 「성에꽃」 — 문학(해냄에듀) 36 ㉱ 밀로·빌렌도르프의 비너스 — 세계사(천재) 18","100점"],
+  ["2","q2","통합사회, 사회·문화, 생활과 윤리, 윤리와 사상","갈퉁의 소극적/적극적 평화로 ㉯~㉳ 분류(소극 2 : 적극 3)","㉮ 윤리와 사상(천재교과서) 208 ㉯ 주희 토지 제도 — 통합사회(지학사) 176 ㉰ 핵 확산 금지 조약 — 통합사회(천재) 257 ㉱ 선별적·보편적 복지 — EBS 수능특강 사회·문화(2023) 145 ㉲ 싱어 『실천 윤리학』 — EBS 수능특강 생활과 윤리(2023) 177 ㉳ 동화주의 — 통합사회(천재) 235·사회·문화(교학사) 195","100점"]]},
+ "2024": { note:"시험 2023.11. EBS 제시문 1개는 2023년 발행 수능특강 문학.", rows:[
+  ["1","q1","국어, 문학, 독서, 고전 읽기, 논술, 윤리와 사상","맹자의 '큰 몸(마음)'과 '작은 몸(감각)'. ㉮의 논지로 ㉯㉰ 설명","㉮ 장원태 「선한 뜻을 이끄는 나의 '큰 몸'」 — 독서(신사고) 120~122 ㉯ 박지원 「일야구도하기」 — 문학(천재) 228~231 ㉰ 신동엽 「누가 하늘을 보았다 하는가」 — EBS 수능특강 문학(2023) 91~92","100점"],
+  ["2","q2","정치와 법, 생활과 윤리, 한국사","형식적/실질적 법치주의로 ㉯~㉲ 분류(형식 1 : 실질 3)","㉮ 정치와 법(지학사) 17 ㉯ 1973년 경범죄 처벌법 개정 — 한국사(씨마스 291, 천재 277) ㉰ 짐 크로법 폐지 — 정치와 법(지학사) 18 ㉱ 야간 옥외 집회 헌법 불합치 — 정치와 법(미래엔) 25 ㉲ 시민 불복종 — 생활과 윤리(미래엔) 105","100점"]]}
+};
+var ORDER = ["2027모의","2026","2025","2024"];
+var LABEL = {"2027모의":"2027 모의","2026":"2026학년도","2025":"2025학년도","2024":"2024학년도"};
+var cur = "2026";
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function render(){
+  document.getElementById("tabs").innerHTML = ORDER.map(function(y){
+    return '<button type="button" class="tab" role="tab" data-y="'+y+'" aria-selected="'+(y===cur)+'">'+LABEL[y]+'</button>'; }).join("");
+  document.getElementById("rows").innerHTML = D[cur].rows.map(function(r){
+    return '<tr><td class="n"><span class="tag '+r[1]+'">문제 '+r[0]+'</span></td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td><td class="n">'+r[5]+'</td></tr>'; }).join("");
+  document.getElementById("note").textContent = D[cur].note;
+}
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b = e.target.closest("[data-y]"); if(!b) return; cur = b.getAttribute("data-y"); render();
+  var t = document.querySelector('.tab[data-y="'+cur+'"]'); if (t) t.focus(); });
+render();
+</script>
+</body>
+</html>

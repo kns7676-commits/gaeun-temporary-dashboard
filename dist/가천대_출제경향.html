@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>가천대 논술 출제경향</title>
+<style>
+/* Layout: 한 열 문서 — 요약 → 집중 공부 → 채점 주의 → 3년 문항표(학년도 탭) → 비교 → 출처 */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --line:#d8dee8; --ink:#18212f; --muted:#5a6678;
+  --accent:#1f5fa8; --accent-soft:#e2ecf8; --warn:#9a4a12; --warn-soft:#fbeedd;
+  --ko:#2f6b3a; --ko-soft:#e3efe4; --ma:#8a3b8f; --ma-soft:#f4e6f5;
+  --font:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11161d; --surface:#19212b; --line:#2b3644; --ink:#e4eaf2; --muted:#9eabbc;
+  --accent:#86b6f0; --accent-soft:#1c2c42; --warn:#f0a868; --warn-soft:#3a2a18;
+  --ko:#7fc58b; --ko-soft:#1f3322; --ma:#e09ae4; --ma-soft:#352038; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#11161d; --surface:#19212b; --line:#2b3644; --ink:#e4eaf2; --muted:#9eabbc;
+  --accent:#86b6f0; --accent-soft:#1c2c42; --warn:#f0a868; --warn-soft:#3a2a18;
+  --ko:#7fc58b; --ko-soft:#1f3322; --ma:#e09ae4; --ma-soft:#352038; color-scheme:dark; }
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:24px 48px; }
+.wrap{ max-width:900px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); gap:18px; }
+h1{ font-size:clamp(22px,5vw,28px); margin:0 0 4px; letter-spacing:-0.01em; text-wrap:balance; }
+h2{ font-size:18px; margin:0 0 10px; }
+h3{ font-size:15px; margin:14px 0 6px; }
+p{ margin:0 0 8px; }
+.sub{ color:var(--muted); font-size:13.5px; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; min-width:0; }
+.key{ background:var(--accent-soft); border-color:transparent; }
+.warn{ background:var(--warn-soft); border-color:transparent; }
+.warn b{ color:var(--warn); }
+ul,ol{ margin:0; padding-left:20px; } li{ margin:3px 0; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 0; }
+.chip{ font-size:12.5px; padding:2px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+.tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.tab{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:6px 14px; font:inherit; font-size:14px; cursor:pointer; }
+.tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:700; }
+.tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.scroll{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px; }
+table.small{ min-width:0; }
+th,td{ border-bottom:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:top; }
+thead th{ font-size:12.5px; color:var(--muted); background:var(--bg); }
+td.n{ white-space:nowrap; font-variant-numeric:tabular-nums; }
+.tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:1px 7px; border-radius:6px; white-space:nowrap; }
+.tag.ko{ background:var(--ko-soft); color:var(--ko); } .tag.ma{ background:var(--ma-soft); color:var(--ma); }
+.grid2{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+.meta{ font-size:13px; color:var(--muted); margin:0 0 8px; }
+a{ color:var(--accent); word-break:break-all; }
+footer{ font-size:12.5px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>가천대 논술 출제경향 (인문)</h1>
+  <p class="sub">2024·2025·2026학년도 기출 45문항 · 가천대 입학처 공식 논술가이드북·기출 해설의 문항카드(출제 근거) 기준 · 2026.11.20 정리</p>
+</header>
+
+<section class="card key">
+  <h2>한눈에 보기</h2>
+  <ul>
+    <li>대학 안내: "EBS 수능연계교재를 활용하여 출제"합니다. 실제로 3년 동안 <b>45문항 중 43문항이 EBS 「수능특강」·「수능완성」</b>에서 나왔고, 매년 <b>그해 수능용 최신판</b>이었습니다(2024 시험 → 2023년 발행본, 2025 → 2024년, 2026 → 2025년).</li>
+    <li>삼육대와 달리 <b>수능특강과 수능완성을 거의 반반</b> 씁니다(3년 합계 수능특강 23·수능완성 19, 1문항은 둘 다).</li>
+    <li>나머지 문항은 <b>문법 1문항</b>입니다. 2025·2026은 「공통국어」 교과서(한글 맞춤법, 음운 변동), 2024는 수능완성(음운 변동)에서 나왔습니다.</li>
+    <li>국어 구성은 거의 고정입니다. <b>화법과 작문 1 · 독서 4 · 문학 3 · 문법 1</b>이고, 독서는 매년 <b>과학·기술 지문 2문항</b>이 포함됐습니다.</li>
+    <li>국어 답은 "제시문에서 찾아 쓰기"가 기본이지만, <b>계산·추론·적용형</b>과 <b>형식 조건</b>(글자 수, 어미 형태)이 매년 섞입니다.</li>
+    <li>2027(올해)은 <b>13문항(국어 8 + 수학 5), 80분</b>입니다. 2026까지는 15문항(9+6)이었습니다. 인문계열 시험일은 <b>11.30(월)</b>입니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>올해 집중할 곳 (3년 분석 기반 추천)</h2>
+  <p class="meta">아래는 기출 패턴에서 이끌어 낸 판단이며, 대학이 올해 범위를 따로 발표한 것은 아닙니다.</p>
+  <ol>
+    <li><b>2026년 발행 「수능특강」과 「수능완성」 국어를 함께</b> 보세요. 가천대는 두 교재를 거의 같은 비율로 씁니다.
+      <div class="chips"><span class="chip">독서</span><span class="chip">문학</span><span class="chip">화법과 작문</span><span class="chip">수능완성 실전편</span></div></li>
+    <li><b>독서 — 과학·기술 지문이 3년 연속</b>(클라우드·저울 → 군집 생태 → 외계 행성) 나왔습니다. 경제·사회 지문도 2025(IMF·SDR)와 2026(소득 불평등 지수)에 나왔습니다. <b>지문 속 공식이나 기준을 새 사례에 적용</b>하는 연습(그래프 읽기, 비율 계산, 분수로 답 쓰기)이 필요합니다.</li>
+    <li><b>문학 — 고전 비중이 큽니다.</b> 향가(「모죽지랑가」), 한시(「화왕가」), 고전소설(「옥루몽」「심생전」), 시조(「고산구곡가」), 고전수필(「왜송설」)이 나왔습니다. 현대는 소설(「장마」)·시(「북어」「저 새」)·수필이 나왔습니다.</li>
+    <li><b>문법 — 매년 1문항, 교과서 개념</b>입니다. <b>음운 변동</b>(비음화·유음화·된소리되기·거센소리되기·구개음화와 표준 발음 쓰기)과 <b>한글 맞춤법 조항</b>(두음 법칙, 거센소리 표기 등)을 정리하세요.</li>
+    <li><b>화법과 작문 — 매년 1문항</b>입니다. 대담·발표·건의문에서 <b>말하기·글쓰기 전략이 쓰인 문장의 첫·마지막 어절</b>을 찾는 형식입니다.</li>
+    <li><b>수학 — 범위가 넓고 고르게</b> 나옵니다. 지수·로그, 수열, 극한, 미분, 적분이 매년 나왔고, <b>사인법칙·코사인법칙은 2025·2026 연속</b> 나왔습니다. 수능특강·수능완성 수학Ⅰ·Ⅱ로 서술형 풀이를 연습하세요.</li>
+  </ol>
+</section>
+
+<section class="card warn">
+  <h2>채점에서 점수를 잃는 곳</h2>
+  <ul>
+    <li><b>맞춤법이 틀리면 오답</b>입니다. 예: 2024 4번 ‘배중률’을 ‘배중율’로 쓰면 오답 처리.</li>
+    <li><b>형식 조건</b>을 지켜야 합니다. "2자 이내", "3자 이내", "어간에 ‘-ㄴ/은’이 결합한 형식", "‘-고’/‘-다’의 형식", "분수의 형식으로" 같은 조건이 매년 나왔습니다.</li>
+    <li>한글(영문)·한글(한자)로 쓸 때는 한글이 맞으면 인정되지만, <b>영문이나 한자만 쓰고 틀리면 오답</b>입니다.</li>
+    <li>첫 어절과 마지막 어절은 <b>순서대로 정확하게</b> 쓴 경우만 정답입니다.</li>
+    <li>수학은 단계별 점수입니다. 중간값을 분명히 적으세요.</li>
+    <li>답안은 <b>검정색 펜</b>으로 씁니다(연필·샤프·빨간 펜 불가). 고칠 때는 취소선을 긋고 고치며, <b>올해(2027)부터 수정액·수정테이프 사용 가능</b>합니다. 2025 가이드북까지는 사용 불가였습니다.</li>
+    <li>답안지의 <b>지정된 영역 밖</b>에 쓴 내용은 평가하지 않습니다.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>3년 전체 문항과 출처</h2>
+  <p class="meta">출처는 대학이 문항카드 "출제 근거"에 적은 교재명과 쪽수입니다. '시간'은 대학이 적은 예상 소요 시간(전체 80분)입니다.</p>
+  <div class="tabs" role="tablist" aria-label="학년도 선택" id="tabs"></div>
+  <div class="scroll"><table>
+    <thead><tr><th>번호</th><th>과목</th><th>내용 · 제시문 · 답 형식</th><th>출처 (교재 · 쪽)</th><th>시간</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p class="meta" id="note" style="margin-top:8px"></p>
+</section>
+
+<section class="card">
+  <h2>3년 비교</h2>
+  <div class="grid2">
+    <div>
+      <h3>국어 영역별 문항 수</h3>
+      <div class="scroll"><table class="small">
+        <thead><tr><th>영역</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+        <tbody>
+          <tr><td>화법과 작문</td><td class="n">1</td><td class="n">1</td><td class="n">1</td></tr>
+          <tr><td>독서</td><td class="n">4</td><td class="n">4</td><td class="n">4</td></tr>
+          <tr><td>문학</td><td class="n">3</td><td class="n">3</td><td class="n">3</td></tr>
+          <tr><td>문법</td><td class="n">1</td><td class="n">1</td><td class="n">1</td></tr>
+        </tbody></table></div>
+      <p class="meta">2024 과목명은 선행학습 영향평가 보고서 문항카드 기준입니다.</p>
+    </div>
+    <div>
+      <h3>대학이 적은 예상 소요 시간 합계</h3>
+      <div class="scroll"><table class="small">
+        <thead><tr><th>학년도</th><th>국어</th><th>수학</th><th>합계</th></tr></thead>
+        <tbody>
+          <tr><td>2024</td><td class="n">35분</td><td class="n">14분</td><td class="n">49분</td></tr>
+          <tr><td>2025</td><td class="n">31분</td><td class="n">19분</td><td class="n">50분</td></tr>
+          <tr><td>2026</td><td class="n">30분</td><td class="n">30분</td><td class="n">60분</td></tr>
+        </tbody></table></div>
+      <p class="meta">2026에 수학 예상 시간이 크게 늘었습니다(문항당 2~3분 → 5분). 2024 수학은 가이드북 기준이며, 선행학습 영향평가 보고서 기준으로는 17분(합계 52분)입니다.</p>
+    </div>
+  </div>
+  <h3>교재별 출처 (45문항)</h3>
+  <div class="scroll"><table class="small">
+    <thead><tr><th>교재</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+    <tbody>
+      <tr><td>수능특강</td><td class="n">8</td><td class="n">7</td><td class="n">8</td></tr>
+      <tr><td>수능완성</td><td class="n">7</td><td class="n">7</td><td class="n">5</td></tr>
+      <tr><td>수능특강+수능완성 함께</td><td class="n">0</td><td class="n">0</td><td class="n">1</td></tr>
+      <tr><td>공통국어 교과서</td><td class="n">0</td><td class="n">1</td><td class="n">1</td></tr>
+    </tbody></table></div>
+</section>
+
+<footer>
+  <p>원문(가천대 입학처):
+  <a href="https://admission.gachon.ac.kr/upload/BBS0024/20260616123153AZX4GY.PDF" target="_blank" rel="noopener">2027 논술가이드북 (2026 기출·해설 수록)</a> ·
+  <a href="https://admission.gachon.ac.kr/admission/html/main/main.asp" target="_blank" rel="noopener">입학처 홈페이지 (논술가이드 메뉴)</a></p>
+  <p>2025학년도 기출은 「논술고사 기출문제 답안 및 해설」, 2024학년도 기출은 <a href="https://admission.gachon.ac.kr/upload/BBS0024/202409251820093L4TU3.PDF" target="_blank" rel="noopener">2025 논술가이드북</a>(26~69쪽)과 <a href="https://admission.gachon.ac.kr/upload/BBS0004/20240524183046FLXYB2.PDF" target="_blank" rel="noopener">2024학년도 선행학습 영향평가 보고서</a>의 문항카드를 확인했습니다.</p>
+</footer>
+</div>
+
+<script>
+var D = {
+ "2026": { note:"출처 교재는 2025년 발행 EBS(2026 수능 대비용). 12번은 문항카드에 과목명이 ‘수학 Ⅰ’로 적혀 있으나 내용은 함수의 극한(수학Ⅱ)입니다. 2027 논술가이드북 26~63쪽.", rows:[
+  [1,"ko","화법과 작문","TV 대담(전 e-스포츠 선수) — 말하기 방식에 해당하는 문장 3개의 첫·마지막 어절","수능완성 121~128",4],
+  [2,"ko","독서(과학)","외계 행성 탐색 ‘시선 속도법’ — 그림에 적용, 공전 주기 추론(답 4일)","수능특강 독서 181~185",2],
+  [3,"ko","독서(과학)","시선 속도법과 통과법 비교 — 2자 이내 단어(파장, 밝기)","수능특강 독서 181~185",2],
+  [4,"ko","독서(경제)","로렌츠 곡선·지니 계수 — ‘-ㄴ/은’ 형식, 2자 이내","수능특강 135~136",3],
+  [5,"ko","독서(경제)","5분위 배율·팔마 비율·10분위 분배율 — 표로 계산해 분수로 쓰기","수능특강 135~136",4],
+  [6,"ko","문학(향가·한시)","득오 「모죽지랑가」, 이익 「화왕가」 — 해당 시행의 첫·마지막 어절","수능특강 44~48",4],
+  [7,"ko","문학(현대소설)","윤흥길 「장마」 — 시점 개념(일인칭 관찰자) 적용, 3자 이내","수능특강 15~17",4],
+  [8,"ko","문법","음운 변동 — 비음화·된소리되기·거센소리되기, 표준 발음 쓰기([음내를], [버팍꽈])","공통국어 교과서 음운의 변동 단원",3],
+  [9,"ko","문학(고전소설)","이옥 「심생전」 — 공간(소광통교, 방/집, 선방/절) 찾기","수능완성 195~197",4],
+  [10,"ma","수학Ⅰ","로그방정식(진수 조건)","수능완성 11",5],
+  [11,"ma","수학Ⅰ","이차부등식을 만족하는 자연수 개수 → 수열의 합","수능완성 32",5],
+  [12,"ma","수학Ⅱ","함수의 극한으로 다항함수 결정","수능완성 42(16번)",5],
+  [13,"ma","수학Ⅱ","미분 — 극대·극소, |t−f(x)|의 미분 불가능점 개수 h(t)","수능특강 66",5],
+  [14,"ma","수학Ⅰ","사인법칙·코사인법칙 — 삼각형 각과 변 구하기","수능완성 22 · 수능특강 55",5],
+  [15,"ma","수학Ⅱ","정적분으로 정의된 다항함수","수능특강 수학Ⅱ 79",5]]},
+ "2025": { note:"출처 교재는 2024년 발행 EBS(2025 수능 대비용). 시험일 2024.11.25(월). 입학처 「논술고사 기출문제 답안 및 해설」.", rows:[
+  [1,"ko","화법과 작문","박물관 해설사의 한글 점자 안내 — 발표에 활용한 자료 고르기","수능완성 257~258",3],
+  [2,"ko","독서(과학)","생물 군집의 상대 풍부도 — 그래프 해석","수능특강 183~187",3],
+  [3,"ko","독서(과학)","심슨 지수(다양도) — 표 사례에 적용, ‘-고’/‘-다’ 형식, 글자 수 조건","수능특강 183~187",4],
+  [4,"ko","독서(경제)","IMF 쿼터와 특별 인출권(SDR) — 빈칸 채우기","수능완성 24~31",4],
+  [5,"ko","독서(인문)","철학사 속 ‘코나투스’의 의미 변화 — 표 빈칸","수능특강 62~66",3],
+  [6,"ko","문학(고전소설)","남영로 「옥루몽」 — 해당 문장의 첫·마지막 어절","수능완성 68~76",4],
+  [7,"ko","문학(현대시)","최승호 「북어」 — 시어·시행 찾기","수능완성 172~173",4],
+  [8,"ko","문학(수필)","정여울 「그때 알았더라면 좋았을 것들」 — 비유 소재 찾기(사금파리, 녹)","수능특강 321~324",4],
+  [9,"ko","문법","한글 맞춤법 조항 적용(성공률, 짭짤하다, 제40항)","공통국어 교과서 한글 맞춤법",2],
+  [10,"ma","수학Ⅰ","지수함수의 최댓값·최솟값","수능특강 수학Ⅰ 23(4번)",2],
+  [11,"ma","수학Ⅱ","극한·급수 — 이차함수의 최솟값","수능특강 14(1번)",3],
+  [12,"ma","수학Ⅱ","정적분으로 나타내어지는 함수","수능완성 64",3],
+  [13,"ma","수학Ⅰ·Ⅱ","수열의 합(소거) — 공차의 집합","수능완성 33",5],
+  [14,"ma","수학Ⅰ","사인법칙·코사인법칙 — 원에 내접한 사각형","수능특강 수학Ⅰ 63·66·68",3],
+  [15,"ma","수학Ⅱ","미분가능성과 극값을 갖는 조건","수능완성 55",3]]},
+ "2024": { note:"출처 교재는 2023년 발행 EBS(2024 수능 대비용). 2025 논술가이드북 26~69쪽에 수록된 2024학년도 인문 기출(답안·해설·출제 근거). 과목명은 2024학년도 선행학습 영향평가 보고서로 보완했고, 12·13번 예상 시간은 가이드북과 보고서가 달라 둘 다 적었습니다. 1번은 제시문(대중교통 건의문)과 <보기>(생활 체육관)가 맞지 않게 실려 있습니다(원문 그대로).", rows:[
+  [1,"ko","화법과 작문","정책 제안 건의문(수요 응답형 대중교통) — 해당 문장의 첫·마지막 어절","수능완성 181~182",3],
+  [2,"ko","독서(기술)","클라우드 컴퓨팅과 하이퍼바이저 — 그림 보고 빈칸","수능완성 139~141",4],
+  [3,"ko","독서(기술)","클라우드 서비스 모델(IaaS·PaaS·SaaS) 구분","수능완성 139~141",4],
+  [4,"ko","독서(인문·논리)","타르스키의 언어 위계론 — 빈칸(‘배중률’, ‘배중율’은 오답)","수능완성 160~161",4],
+  [5,"ko","독서(과학)","저울의 측정 원리 — 수치 계산(15kg, 13cm)","수능특강 195~198",4],
+  [6,"ko","문법(언어와 매체)","음운 변동 — 예 고르기(칼날, 국물, 닫히다)","수능완성 259",2],
+  [7,"ko","문학(시조·현대시)","이이 「고산구곡가」, 김용택 「저 새」 — 시어 찾기","수능특강 63~64",5],
+  [8,"ko","문학(시조·현대시)","같은 지문 — 해당 수(首)와 시행 찾기","수능특강 63~64",5],
+  [9,"ko","문학(고전수필)","이식 「왜송설」 — 2음절 단어 찾기(왜송, 송백)","수능특강 249~254",4],
+  [10,"ma","수학Ⅰ","지수·로그 계산","수능특강 11",2],
+  [11,"ma","수학Ⅰ","삼각함수의 성질","수능특강 48",2],
+  [12,"ma","수학Ⅱ","함수의 연속 — |4cos x − 2|와 직선의 교점 개수","수능완성 23(17번)·48(24번)","3(보고서 5)"],
+  [13,"ma","수학Ⅰ","등비수열의 합","수능완성 33","2(보고서 3)"],
+  [14,"ma","수학Ⅱ","미분 — 속도와 가속도","수능특강 69",2],
+  [15,"ma","수학Ⅱ","극한과 정적분","수능특강 83(7번)",3]]}
+};
+var cur = "2026";
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function render(){
+  document.getElementById("tabs").innerHTML = ["2026","2025","2024"].map(function(y){
+    return '<button type="button" class="tab" role="tab" data-y="'+y+'" aria-selected="'+(y===cur)+'">'+y+'학년도</button>'; }).join("");
+  document.getElementById("rows").innerHTML = D[cur].rows.map(function(r){
+    return '<tr><td class="n">'+r[0]+'</td><td><span class="tag '+r[1]+'">'+esc(r[2])+'</span></td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td><td class="n">'+r[5]+'분</td></tr>'; }).join("");
+  document.getElementById("note").textContent = D[cur].note;
+}
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b = e.target.closest("[data-y]"); if(!b) return; cur = b.getAttribute("data-y"); render();
+  var t = document.querySelector('.tab[data-y="'+cur+'"]'); if (t) t.focus(); });
+render();
+</script>
+</body>
+</html>
